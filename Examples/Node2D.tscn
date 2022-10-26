@@ -17,10 +17,18 @@ margin_right = 376.0
 margin_bottom = 204.0
 resizable = true
 
-[node name="Tree" type="Tree" parent="Control/ConfirmationDialog"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="TextEdit" type="TextEdit" parent="Control/ConfirmationDialog"]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -36.0
+margin_right = 368.0
+margin_bottom = 168.0
+
+[node name="Tree" type="Tree" parent="Control/ConfirmationDialog"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 368.0
+margin_bottom = 168.0
+
+[node name="LineEdit" type="LineEdit" parent="Control/ConfirmationDialog"]
+margin_right = 58.0
+margin_bottom = 24.0

@@ -18,12 +18,19 @@ public class SelectDialog<T> : ConfirmationDialog
             new VBoxContainer()
             .WitchChilds(
                 (filterText = new LineEdit() { PlaceholderText = "Filter nodes" }),
-                (tree = new Tree()
+                // (tree = new Tree()
+                // {
+                //     SizeFlagsVertical = (int)SizeFlags.ExpandFill
+                // })
+                new Button()
                 {
-                    SizeFlagsVertical = (int)SizeFlags.ExpandFill
-                })
+                    SizeFlagsVertical = (int)SizeFlags.ExpandFill,
+                    Icon = Plugin.GetIcon("AnimationPlayer"),
+                }
             )
         );
+
+        Update();
 
         GetCancel().Connect("pressed", this, nameof(Cancel));
         GetCloseButton().Connect("pressed", this, nameof(Cancel));
@@ -34,7 +41,6 @@ public class SelectDialog<T> : ConfirmationDialog
 
     public void Confirm()
     {
-
     }
 
     public void Cancel()

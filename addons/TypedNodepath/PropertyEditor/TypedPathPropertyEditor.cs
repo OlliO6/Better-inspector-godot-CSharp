@@ -63,8 +63,6 @@ public class TypedPathPropertyEditor<T> : EditorProperty
     {
         NodePath<T> selectedPath = await StartSelection();
 
-        GD.Print("Hello world");
-
         if (selectedPath != null) Value = selectedPath;
     }
 
