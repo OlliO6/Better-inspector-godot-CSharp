@@ -2,6 +2,7 @@
 namespace TypedNodePaths;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 
 [Tool]
@@ -11,6 +12,7 @@ public class TypedPathPropertyEditor<T> : EditorProperty
     private Button assignButton, clearButton;
 
     private NodePath<T> value;
+    private SelectDialog<T> selectDialog;
 
     public NodePath<T> Value
     {
@@ -19,6 +21,7 @@ public class TypedPathPropertyEditor<T> : EditorProperty
         {
             this.value = value;
             EmitChanged(GetEditedProperty(), Value);
+            RefreshAssignButtonText();
         }
     }
 
@@ -36,7 +39,8 @@ public class TypedPathPropertyEditor<T> : EditorProperty
                 {
                     Icon = GD.Load<Texture>("res://addons/TypedNodepath/Icons/Clear.png")
                 })
-            )
+            ),
+            selectDialog = new SelectDialog<T>()
         );
 
         AddFocusable(assignButton);
@@ -55,16 +59,27 @@ public class TypedPathPropertyEditor<T> : EditorProperty
             return;
     }
 
-    private void OnAssignPressed()
+    private async void OnAssignPressed()
     {
-        Value = new((GetEditedObject() as Node).GetChild(0).Name);
-        GD.Print("ASSIGNING");
+        NodePath<T> selectedPath = await StartSelection();
+
+        GD.Print("Hello world");
+
+        if (selectedPath != null) Value = selectedPath;
+    }
+
+    private async Task<NodePath<T>> StartSelection()
+    {
+        selectDialog.PopupCenteredRatio();
+
+        await ToSignal(selectDialog, "popup_hide");
+
+        return selectDialog.GetSelectedPathResult();
     }
 
     private void OnClearPressed()
     {
         Value = null;
-        GD.Print("CLEARED");
     }
 
     private void RefreshAssignButtonText()

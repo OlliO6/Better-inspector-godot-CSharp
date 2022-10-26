@@ -1,15 +1,26 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
 
-[sub_resource type="CSharpScript" id=1]
-
-[sub_resource type="Resource" id=2]
-script = SubResource( 1 )
-
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
-anim = SubResource( 2 )
-animTree = NodePath("")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Control"]
+visible = true
+margin_right = 376.0
+margin_bottom = 204.0
+resizable = true
+
+[node name="Tree" type="Tree" parent="Control/ConfirmationDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
