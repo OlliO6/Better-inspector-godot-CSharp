@@ -5,14 +5,14 @@ using System;
 using Godot;
 
 [Tool]
-public class TypedPathPropertyEditor : EditorProperty
+public class TypedPathPropertyEditor<T> : EditorProperty
+    where T : class
 {
     private Button assignButton, clearButton;
 
-    private NodePath value;
-    private readonly Type forType;
+    private NodePath<T> value;
 
-    public NodePath Value
+    public NodePath<T> Value
     {
         get => value;
         set
@@ -22,10 +22,8 @@ public class TypedPathPropertyEditor : EditorProperty
         }
     }
 
-    public TypedPathPropertyEditor(Type forType)
+    public TypedPathPropertyEditor()
     {
-        this.forType = forType;
-
         this.WitchChilds(
             new HBoxContainer()
                     .Setted("custom_constants/separation", 0)
@@ -43,6 +41,7 @@ public class TypedPathPropertyEditor : EditorProperty
 
         AddFocusable(assignButton);
         AddFocusable(clearButton);
+        RefreshAssignButtonText();
 
         assignButton.Connect("pressed", this, nameof(OnAssignPressed));
         clearButton.Connect("pressed", this, nameof(OnClearPressed));
@@ -50,12 +49,15 @@ public class TypedPathPropertyEditor : EditorProperty
 
     public override void UpdateProperty()
     {
-
+        // Read the current value from the property.
+        var newValue = (NodePath<T>)GetEditedObject().Get(GetEditedProperty());
+        if (newValue == Value)
+            return;
     }
 
     private void OnAssignPressed()
     {
-        value = (GetEditedObject() as Node).GetChild(0).Name;
+        Value = new((GetEditedObject() as Node).GetChild(0).Name);
         GD.Print("ASSIGNING");
     }
 
@@ -66,7 +68,7 @@ public class TypedPathPropertyEditor : EditorProperty
     }
 
     private void RefreshAssignButtonText()
-        => assignButton.Text = Value is null ? "Assign..." : Value;
+        => assignButton.Text = Value is null ? "Assign..." : Value.path;
 }
 
 #endif

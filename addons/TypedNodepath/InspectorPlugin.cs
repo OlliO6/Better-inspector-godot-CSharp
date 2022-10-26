@@ -8,8 +8,6 @@ using Godot;
 [Tool]
 public class InspectorPlugin : EditorInspectorPlugin
 {
-    public PackedScene propertyEditorScene = GD.Load<PackedScene>("res://addons/TypedNodepath/PropertyEditor/PropertyEditor.tscn");
-
     private System.Type cachedType = null;
 
     public override bool CanHandle(Godot.Object @object) => true;
@@ -29,7 +27,8 @@ public class InspectorPlugin : EditorInspectorPlugin
 
         if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(TypedNodePaths.NodePath<>))
         {
-            AddPropertyEditor(path, new TypedPathPropertyEditor(type));
+            // Make TypedPathPropertyEditor instance with correct type
+            AddPropertyEditor(path, (EditorProperty)Activator.CreateInstance(typeof(TypedPathPropertyEditor<>).MakeGenericType(type)));
             return true;
         }
 
