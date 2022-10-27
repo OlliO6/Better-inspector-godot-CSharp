@@ -6,9 +6,6 @@
 margin_right = 262.0
 margin_bottom = 546.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
 margin_right = 148.0
@@ -27,9 +24,6 @@ text = "Save branch as scene"
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ShowInInspectorCheckbox" type="CheckBox" parent="VBoxContainer"]
 margin_right = 262.0
@@ -53,8 +47,8 @@ text = "Hello World"
 margin_right = 315.0
 margin_bottom = 130.0
 filters = PoolStringArray( "*.tscn ; TSCN", "*.scn ; SCN", "*.res ; RES" )
-current_file = "EditorBranch.tscn"
-current_path = "res://EditorBranch.tscn"
+show_hidden_files = true
+
 [connection signal="pressed" from="PopupMenu/SaveBranchAsSceneButton" to="." method="_on_SaveBranchAsSceneButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/ShowInInspectorCheckbox" to="." method="_on_ShowInInspectorCheckbox_toggled"]
 [connection signal="item_rmb_selected" from="VBoxContainer/Tree" to="." method="_on_Tree_item_rmb_selected"]

@@ -8,7 +8,7 @@ using Godot;
 [Tool]
 public class InspectorPlugin : EditorInspectorPlugin
 {
-    private System.Type cachedType = null;
+    private Type cachedType = null;
 
     public override bool CanHandle(Godot.Object @object) => true;
 
@@ -28,7 +28,12 @@ public class InspectorPlugin : EditorInspectorPlugin
         if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(TypedNodePaths.NodePath<>))
         {
             // Make TypedPathPropertyEditor instance with correct type
-            AddPropertyEditor(path, (EditorProperty)Activator.CreateInstance(typeof(TypedPathPropertyEditor<>).MakeGenericType(type)));
+            AddPropertyEditor(
+                property: path,
+                editor: (EditorProperty)Activator
+                        .CreateInstance(typeof(TypedPathPropertyEditor<>)
+                                .MakeGenericType(type.GetGenericArguments()[0])));
+
             return true;
         }
 

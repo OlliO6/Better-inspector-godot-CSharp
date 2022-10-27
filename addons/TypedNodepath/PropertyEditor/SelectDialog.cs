@@ -12,29 +12,33 @@ public class SelectDialog<T> : ConfirmationDialog
 
     public SelectDialog()
     {
-        WindowTitle = "SelectNode";
+        WindowTitle = "Select a " + typeof(T).FullName;
 
         this.WitchChilds(
             new VBoxContainer()
             .WitchChilds(
-                (filterText = new LineEdit() { PlaceholderText = "Filter nodes" }),
-                // (tree = new Tree()
-                // {
-                //     SizeFlagsVertical = (int)SizeFlags.ExpandFill
-                // })
-                new Button()
+                (filterText = new LineEdit()
+                {
+                    PlaceholderText = "Filter nodes",
+                    RightIcon = Plugin.GetIcon("Search")
+                }),
+                (tree = new Tree()
                 {
                     SizeFlagsVertical = (int)SizeFlags.ExpandFill,
-                    Icon = Plugin.GetIcon("AnimationPlayer"),
-                }
+                    SelectMode = Tree.SelectModeEnum.Single
+                })
             )
         );
 
-        Update();
+        UpdateNodeTree();
 
         GetCancel().Connect("pressed", this, nameof(Cancel));
         GetCloseButton().Connect("pressed", this, nameof(Cancel));
         GetOk().Connect("pressed", this, nameof(Confirm));
+    }
+
+    private void UpdateNodeTree()
+    {
     }
 
     public NodePath<T> GetSelectedPathResult() => null;

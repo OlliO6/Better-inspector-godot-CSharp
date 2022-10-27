@@ -53,9 +53,7 @@ public static class Utilities
     public static T WitchChilds<T>(this T from, params Node[] childs) where T : Node
     {
         foreach (var child in childs)
-        {
             from.AddChild(child);
-        }
 
         return from;
     }

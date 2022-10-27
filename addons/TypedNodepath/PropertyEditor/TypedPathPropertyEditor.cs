@@ -28,19 +28,31 @@ public class TypedPathPropertyEditor<T> : EditorProperty
     public TypedPathPropertyEditor()
     {
         this.WitchChilds(
-            new HBoxContainer()
-                    .Setted("custom_constants/separation", 0)
+            new PanelContainer()
+            .Setted("custom_styles/panel", new StyleBoxFlat()
+            {
+                BgColor = new("202431")
+            })
             .WitchChilds(
-                (assignButton = new Button()
+                new HBoxContainer()
                 {
-                    SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
-                }),
-                (clearButton = new Button()
-                {
-                    Icon = GD.Load<Texture>("res://addons/TypedNodepath/Icons/Clear.png")
-                })
-            ),
-            selectDialog = new SelectDialog<T>()
+                    AnchorRight = 1,
+                    AnchorBottom = 1
+                }
+                .Setted("custom_constants/separation", 0)
+                .WitchChilds(
+                    (assignButton = new Button()
+                    {
+                        SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
+                    }),
+                    (clearButton = new Button()
+                    {
+                        Icon = Plugin.GetIcon("Clear"),
+                        Flat = true
+                    })
+                ),
+                selectDialog = new SelectDialog<T>()
+            )
         );
 
         AddFocusable(assignButton);
