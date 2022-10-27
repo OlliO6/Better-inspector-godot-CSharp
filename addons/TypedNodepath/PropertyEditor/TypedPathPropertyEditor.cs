@@ -19,9 +19,15 @@ public class TypedPathPropertyEditor<T> : EditorProperty
         get => value;
         set
         {
+            if (value == this.value) return;
+
             this.value = value;
-            EmitChanged(GetEditedProperty(), Value);
-            RefreshAssignButtonText();
+
+            Resource resource = new Resource();
+            resource.SetScript(GD.Load("res://addons/TypedNodepath/TypedNodePath.cs"));
+            resource.Set("path", Value.path);
+            EmitChanged(GetEditedProperty(), resource);
+            RefreshAssignButtonVisual();
         }
     }
 
@@ -57,7 +63,7 @@ public class TypedPathPropertyEditor<T> : EditorProperty
 
         AddFocusable(assignButton);
         AddFocusable(clearButton);
-        RefreshAssignButtonText();
+        RefreshAssignButtonVisual();
 
         assignButton.Connect("pressed", this, nameof(OnAssignPressed));
         clearButton.Connect("pressed", this, nameof(OnClearPressed));
@@ -66,16 +72,20 @@ public class TypedPathPropertyEditor<T> : EditorProperty
     public override void UpdateProperty()
     {
         // Read the current value from the property.
-        var newValue = (NodePath<T>)GetEditedObject().Get(GetEditedProperty());
+        Resource resource = (Resource)GetEditedObject().Get(GetEditedProperty());
+        var newValue = new NodePath<T>((NodePath)resource.Get("path"));
         if (newValue == Value)
             return;
+
+        Value = newValue;
     }
 
     private async void OnAssignPressed()
     {
         NodePath<T> selectedPath = await StartSelection();
 
-        if (selectedPath != null) Value = selectedPath;
+        if (selectedPath != null)
+            Value = selectedPath;
     }
 
     private async Task<NodePath<T>> StartSelection()
@@ -92,8 +102,20 @@ public class TypedPathPropertyEditor<T> : EditorProperty
         Value = null;
     }
 
-    private void RefreshAssignButtonText()
-        => assignButton.Text = Value is null ? "Assign..." : Value.path;
+    private void RefreshAssignButtonVisual()
+    {
+        if (Value is null)
+        {
+            assignButton.Text = "Assign...";
+            assignButton.Flat = false;
+            assignButton.Icon = null;
+            return;
+        }
+        assignButton.Text = Value.path;
+        assignButton.Flat = true;
+        Node node = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(Value.path);
+        assignButton.Icon = Plugin.GetIcon(node != null ? node.GetClass() : null);
+    }
 }
 
 #endif
