@@ -23,7 +23,7 @@ public class InspectorPlugin : EditorInspectorPlugin
 
         Type type = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.FieldType;
 
-        if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(TypedNodePaths.TypedNodePath<>))
+        if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(NodePath<>))
         {
             // Make TypedPathPropertyEditor instance with correct type
             AddPropertyEditor(

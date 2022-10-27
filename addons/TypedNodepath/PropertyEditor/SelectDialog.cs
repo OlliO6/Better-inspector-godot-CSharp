@@ -110,7 +110,7 @@ public class SelectDialog<T> : ConfirmationDialog
         }
     }
 
-    public TypedNodePath<T> GetSelectedPathResult() => new(tree.GetSelected().GetText(0));
+    public NodePath<T> GetSelectedPathResult() => new(tree.GetSelected().GetText(0));
 
     public void Confirm()
     {
