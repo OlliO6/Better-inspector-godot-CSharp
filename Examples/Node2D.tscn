@@ -1,36 +1,81 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
+[ext_resource path="res://Demo.tscn" type="PackedScene" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 7
+border_width_top = 22
+border_width_right = 29
+border_width_bottom = 27
 
 [node name="Node2D" type="Node2D"]
+modulate = Color( 1, 0.73, 0.7345, 1 )
 script = ExtResource( 1 )
-animTree = NodePath("")
+animTree = NodePath("Control/Control")
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color( 0.12549, 0.141176, 0.192157, 1 )
+margin_left = 265.0
+margin_top = 53.0
+margin_right = 305.0
+margin_bottom = 93.0
+
+[node name="LineEdit" type="LineEdit" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+margin_left = 203.0
+margin_top = 106.0
+margin_right = 387.0
+margin_bottom = 144.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="LineEdit2" type="LineEdit" parent="PanelContainer"]
+margin_left = 7.0
+margin_top = 22.0
+margin_right = 155.0
+margin_bottom = 46.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+visible = true
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 207.0
+margin_bottom = 77.0
+resizable = true
+
+[node name="TextEdit" type="TextEdit" parent="ConfirmationDialog"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 192.0
+margin_bottom = 34.0
+
+[node name="Tree" type="Tree" parent="ConfirmationDialog"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 192.0
+margin_bottom = 34.0
+
 [node name="Control" type="Control" parent="."]
+unique_name_in_owner = true
 margin_right = 40.0
 margin_bottom = 40.0
 
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Control"]
-margin_right = 376.0
-margin_bottom = 204.0
-resizable = true
+[node name="Control" parent="Control" instance=ExtResource( 2 )]
 
-[node name="TextEdit" type="TextEdit" parent="Control/ConfirmationDialog"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 368.0
-margin_bottom = 168.0
+[node name="TextureRect" parent="Control/Control/CenterContainer" index="0"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 20.0
+margin_bottom = 20.0
 
-[node name="Tree" type="Tree" parent="Control/ConfirmationDialog"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 368.0
-margin_bottom = 168.0
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 
-[node name="LineEdit" type="LineEdit" parent="Control/ConfirmationDialog"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 368.0
-margin_bottom = 168.0
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[editable path="Control/Control"]

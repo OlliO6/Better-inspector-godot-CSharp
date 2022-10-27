@@ -80,7 +80,7 @@ public class TypedPathPropertyEditor<T> : EditorProperty
 
     private async Task<NodePath<T>> StartSelection()
     {
-        selectDialog.PopupCenteredRatio();
+        selectDialog.PopupCenteredMinsize(new(500, 800));
 
         await ToSignal(selectDialog, "popup_hide");
 
