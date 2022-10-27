@@ -24,7 +24,7 @@ public static class Utilities
 
     public static Type GetTypeFromSource(string source) => Type.GetType(GetTypeName(source));
 
-    // Becaause source code property doesn't updates sometimes
+    // Because source code property doesn't updates sometimes
     public static string GetRealSourceCode(CSharpScript script)
     {
         File file = new();
@@ -61,6 +61,12 @@ public static class Utilities
     public static T Setted<T>(this T from, string property, object value) where T : Node
     {
         from.Set(property, value);
+        return from;
+    }
+
+    public static T Connected<T>(this T from, string signal, Godot.Object to, string method) where T : Node
+    {
+        from.Connect(signal, to, method);
         return from;
     }
 }

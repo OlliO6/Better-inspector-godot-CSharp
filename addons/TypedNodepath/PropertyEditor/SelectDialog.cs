@@ -18,11 +18,20 @@ public class SelectDialog<T> : ConfirmationDialog
         this.WitchChilds(
             new VBoxContainer()
             .WitchChilds(
-                (filterText = new LineEdit()
-                {
-                    PlaceholderText = "Filter nodes",
-                    RightIcon = Plugin.GetIcon("Search")
-                }),
+                new HBoxContainer()
+                .WitchChilds(
+                    (filterText = new LineEdit()
+                    {
+                        SizeFlagsHorizontal = (int)SizeFlags.ExpandFill,
+                        PlaceholderText = "Filter nodes",
+                        RightIcon = Plugin.GetIcon("Search")
+                    }),
+                    new CheckButton()
+                    {
+                        Text = "Show unowned"
+                    }
+                    .Connected("toggled", this, nameof(OnShowUnownedNodes))
+                ),
                 (tree = new Tree()
                 {
                     SizeFlagsVertical = (int)SizeFlags.ExpandFill,
@@ -31,14 +40,24 @@ public class SelectDialog<T> : ConfirmationDialog
             )
         );
 
-        UpdateNodeTree(false);
+        UpdateNodeTree();
 
         GetCancel().Connect("pressed", this, nameof(Cancel));
         GetCloseButton().Connect("pressed", this, nameof(Cancel));
         GetOk().Connect("pressed", this, nameof(Confirm));
     }
 
-    private void UpdateNodeTree(bool onlyOwnNodes)
+    private void OnShowUnownedNodes(bool toggled)
+    {
+        if (toggled)
+        {
+            UpdateNodeTree(false);
+            return;
+        }
+        UpdateNodeTree();
+    }
+
+    private void UpdateNodeTree(bool onlyOwnNodes = true)
     {
         if (!Plugin.hasInstance)
             return;
@@ -56,17 +75,18 @@ public class SelectDialog<T> : ConfirmationDialog
             treeItem.SetText(0, node.Name);
             treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
 
-            GD.Print(node.Name, " Child count: ", node.GetChildCount());
+            if (node.Owner != rootNode && node != rootNode)
+            {
+                treeItem.Collapsed = true;
+                treeItem.SetCustomColor(0, Colors.Cornsilk);
+            }
 
             foreach (Node child in node.GetChildren())
             {
                 if (onlyOwnNodes && child.Owner != rootNode)
                     continue;
 
-                AddNodeRecursive(
-                   tree,
-                   tree.CreateItem(treeItem),
-                   child);
+                AddNodeRecursive(tree, tree.CreateItem(treeItem), child);
             }
         }
     }

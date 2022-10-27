@@ -11,9 +11,10 @@ border_width_right = 29
 border_width_bottom = 27
 
 [node name="Node2D" type="Node2D"]
-modulate = Color( 1, 0.73, 0.7345, 1 )
+modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
 animTree = NodePath("Control/Control")
+number = null
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )
@@ -41,6 +42,12 @@ margin_bottom = 46.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
+[node name="TextEdit" type="TextEdit" parent="."]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 199.0
+margin_bottom = 41.0
+
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 visible = true
 margin_left = 7.0
@@ -48,12 +55,6 @@ margin_top = 7.0
 margin_right = 207.0
 margin_bottom = 77.0
 resizable = true
-
-[node name="TextEdit" type="TextEdit" parent="ConfirmationDialog"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 192.0
-margin_bottom = 34.0
 
 [node name="Tree" type="Tree" parent="ConfirmationDialog"]
 margin_left = 8.0
