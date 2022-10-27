@@ -1,6 +1,8 @@
 namespace TypedNodePaths;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Godot;
 
@@ -62,11 +64,17 @@ public class SelectDialog<T> : ConfirmationDialog
         if (!Plugin.hasInstance)
             return;
 
-        tree.Clear();
-
-        var rootItem = tree.CreateItem();
         var rootNode = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();
 
+        // Get instanced Nodes with editable children
+        var editablePaths = GD.Load<PackedScene>(rootNode.Filename)._Bundled["editable_instances"] as Godot.Collections.Array;
+        List<Node> editableNodes = new(editablePaths.Count);
+
+        foreach (NodePath path in editablePaths)
+            editableNodes.Add(rootNode.GetNode(path));
+
+        tree.Clear();
+        var rootItem = tree.CreateItem();
         AddNodeRecursive(tree, rootItem, rootNode);
 
         void AddNodeRecursive(Tree tree, TreeItem treeItem, Node node)
@@ -75,23 +83,34 @@ public class SelectDialog<T> : ConfirmationDialog
             treeItem.SetText(0, node.Name);
             treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
 
-            if (node.Owner != rootNode && node != rootNode)
+            if ((node.Owner != rootNode && node != rootNode) ||
+                    (treeItem.GetParent() != null && (bool)treeItem.GetParent().HasMeta("Instanced")))
             {
                 treeItem.Collapsed = true;
-                treeItem.SetCustomColor(0, Colors.Cornsilk);
+                treeItem.SetCustomColor(0, Colors.LightSteelBlue);
+            }
+
+            if (editableNodes.Contains(node) ||
+                    (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced")))
+            {
+                treeItem.SetMeta("Instanced", true);
             }
 
             foreach (Node child in node.GetChildren())
             {
-                if (onlyOwnNodes && child.Owner != rootNode)
-                    continue;
+                if ((onlyOwnNodes && child.Owner != rootNode))
+                {
+                    if (treeItem.HasMeta("Instanced"))
+                        AddNodeRecursive(tree, tree.CreateItem(treeItem), child);
 
+                    continue;
+                }
                 AddNodeRecursive(tree, tree.CreateItem(treeItem), child);
             }
         }
     }
 
-    public NodePath<T> GetSelectedPathResult() => null;
+    public TypedNodePath<T> GetSelectedPathResult() => new(tree.GetSelected().GetText(0));
 
     public void Confirm()
     {
