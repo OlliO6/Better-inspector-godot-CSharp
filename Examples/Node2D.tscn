@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
 [ext_resource path="res://Demo.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/TypedNodepath/NodePath.cs" type="Script" id=3]
 
-[sub_resource type="CSharpScript" id=2]
+[sub_resource type="Resource" id=2]
+script = ExtResource( 3 )
+path = NodePath("AnimationPlay")
 
 [sub_resource type="Resource" id=3]
-script = SubResource( 2 )
+script = ExtResource( 3 )
+path = NodePath("Camera2D")
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -18,8 +22,8 @@ border_width_bottom = 27
 [node name="Node2D" type="Node2D"]
 modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
+damagae = SubResource( 2 )
 anim = SubResource( 3 )
-animTree = NodePath("AnimationPlay")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )

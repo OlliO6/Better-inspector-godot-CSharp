@@ -1,15 +1,12 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
-[ext_resource path="res://addons/TypedNodepath/TypedNodePath.cs" type="Script" id=2]
-
-[sub_resource type="Resource" id=1]
-script = ExtResource( 2 )
-path = NodePath("Control3")
+[ext_resource path="res://Examples/Testing.cs" type="Script" id=0]
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource( 1 )
-damagae = SubResource( 1 )
+script = ExtResource( 0 )
+damagae = NodePath("Control3")
+anim = NodePath("")
+animTree = NodePath("")
 
 [node name="Control" type="Control" parent="."]
 margin_right = 40.0
@@ -19,6 +16,6 @@ margin_bottom = 40.0
 margin_right = 40.0
 margin_bottom = 40.0
 
-[node name="Control3" type="Control" parent="."]
+[node name="Control3" type="Control" parent="Control2"]
 margin_right = 40.0
 margin_bottom = 40.0

@@ -21,21 +21,20 @@ public class InspectorPlugin : EditorInspectorPlugin
     {
         string propName = path.GetFile();
 
-        Type type = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.FieldType;
+        FieldInfo field = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-        if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(NodePath<>))
-        {
-            // Make TypedPathPropertyEditor instance with correct type
-            AddPropertyEditor(
-                property: path,
-                editor: (EditorProperty)Activator
-                        .CreateInstance(typeof(TypedPathPropertyEditor<>)
-                                .MakeGenericType(type.GetGenericArguments()[0])));
+        if (field == null || field.FieldType != typeof(NodePath)) return false;
 
-            return true;
-        }
+        var attribute = field.GetCustomAttribute<TypedPathAttribute>();
 
-        return false;
+        if (attribute == null) return false;
+
+        // Make TypedPathPropertyEditor instance with correct type
+        AddPropertyEditor(
+            property: path,
+            editor: new TypedPathPropertyEditor(attribute.type));
+
+        return true;
     }
 }
 

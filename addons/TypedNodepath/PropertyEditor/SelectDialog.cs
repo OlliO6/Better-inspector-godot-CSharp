@@ -1,22 +1,23 @@
+#if TOOLS
 namespace TypedNodePaths;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Godot;
 
-public class SelectDialog<T> : ConfirmationDialog
-    where T : class
+public class SelectDialog : ConfirmationDialog
 {
+    private readonly Type type;
     private Tree tree;
     private LineEdit filterText;
 
-    public SelectDialog()
+    public SelectDialog(Type type)
     {
-        WindowTitle = "Select a " + typeof(T).FullName;
+        this.type = type;
+        WindowTitle = "Select a " + type.FullName;
         Resizable = true;
 
+        // Construct the dialog content
         this.WitchChilds(
             new VBoxContainer()
             .WitchChilds(
@@ -110,7 +111,7 @@ public class SelectDialog<T> : ConfirmationDialog
         }
     }
 
-    public NodePath<T> GetSelectedPathResult() => new(tree.GetSelected().GetText(0));
+    public NodePath GetSelectedPathResult() => tree.GetSelected().GetText(0);
 
     public void Confirm()
     {
@@ -120,3 +121,5 @@ public class SelectDialog<T> : ConfirmationDialog
     {
     }
 }
+
+#endif

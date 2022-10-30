@@ -6,15 +6,18 @@ using System.Threading.Tasks;
 using Godot;
 
 [Tool]
-public class TypedPathPropertyEditor<T> : EditorProperty
-    where T : class
+public class TypedPathPropertyEditor : EditorProperty
 {
+    private readonly Type type;
+
     private Button assignButton, clearButton;
 
-    private NodePath<T> value;
-    private SelectDialog<T> selectDialog;
+    private bool isUpdating;
 
-    public NodePath<T> Value
+    private NodePath value;
+    private SelectDialog selectDialog;
+
+    public NodePath Value
     {
         get => value;
         set
@@ -23,16 +26,15 @@ public class TypedPathPropertyEditor<T> : EditorProperty
 
             this.value = value;
 
-            Resource resource = new Resource();
-            resource.SetScript(GD.Load("res://addons/TypedNodepath/TypedNodePath.cs"));
-            resource.Set("path", Value.path);
-            EmitChanged(GetEditedProperty(), resource);
+            if (!isUpdating) EmitChanged(GetEditedProperty(), value);
             RefreshAssignButtonVisual();
         }
     }
 
-    public TypedPathPropertyEditor()
+    public TypedPathPropertyEditor(Type type)
     {
+        this.type = type;
+
         this.WitchChilds(
             new PanelContainer()
             .Setted("custom_styles/panel", new StyleBoxFlat()
@@ -57,7 +59,7 @@ public class TypedPathPropertyEditor<T> : EditorProperty
                         Flat = true
                     })
                 ),
-                selectDialog = new SelectDialog<T>()
+                selectDialog = new SelectDialog(type)
             )
         );
 
@@ -71,24 +73,25 @@ public class TypedPathPropertyEditor<T> : EditorProperty
 
     public override void UpdateProperty()
     {
-        // Read the current value from the property.
-        Resource resource = (Resource)GetEditedObject().Get(GetEditedProperty());
-        var newValue = new NodePath<T>((NodePath)resource.Get("path"));
-        if (newValue == Value)
-            return;
+        isUpdating = true;
 
-        Value = newValue;
+        NodePath property = GetEditedObject().Get(GetEditedProperty()) as NodePath;
+
+        GD.Print(property);
+        Value = property;
+
+        isUpdating = false;
     }
 
     private async void OnAssignPressed()
     {
-        NodePath<T> selectedPath = await StartSelection();
+        NodePath selectedPath = await StartSelection();
 
         if (selectedPath != null)
             Value = selectedPath;
     }
 
-    private async Task<NodePath<T>> StartSelection()
+    private async Task<NodePath> StartSelection()
     {
         selectDialog.PopupCenteredMinsize(new(500, 800));
 
@@ -111,9 +114,9 @@ public class TypedPathPropertyEditor<T> : EditorProperty
             assignButton.Icon = null;
             return;
         }
-        assignButton.Text = Value.path;
+        assignButton.Text = Value;
         assignButton.Flat = true;
-        Node node = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(Value.path);
+        Node node = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(Value);
         assignButton.Icon = Plugin.GetIcon(node != null ? node.GetClass() : null);
     }
 }

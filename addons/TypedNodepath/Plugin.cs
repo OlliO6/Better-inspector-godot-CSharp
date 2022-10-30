@@ -26,7 +26,7 @@ public class Plugin : EditorPlugin
     {
         instance = this;
 
-        AddCustomType("TypedNodePath", "Resource", GD.Load<Script>("res://addons/TypedNodepath/TypedNodePath.cs"), null);
+        AddCustomType("TypedNodePath", "Resource", GD.Load<Script>("res://addons/TypedNodepath/NodePath.cs"), null);
         AddInspectorPlugin(inspectorPlugin = new());
     }
 
