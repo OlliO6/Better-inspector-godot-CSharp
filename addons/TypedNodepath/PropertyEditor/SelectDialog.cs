@@ -43,11 +43,15 @@ public class SelectDialog : ConfirmationDialog
             )
         );
 
-        UpdateNodeTree();
-
+        this.Connect("about_to_show", this, nameof(OnAboutToShow));
         GetCancel().Connect("pressed", this, nameof(Cancel));
         GetCloseButton().Connect("pressed", this, nameof(Cancel));
         GetOk().Connect("pressed", this, nameof(Confirm));
+    }
+
+    private void OnAboutToShow()
+    {
+        UpdateNodeTree();
     }
 
     private void OnShowUnownedNodes(bool toggled)
@@ -62,7 +66,7 @@ public class SelectDialog : ConfirmationDialog
 
     private void UpdateNodeTree(bool onlyOwnNodes = true)
     {
-        if (!Plugin.hasInstance)
+        if (!Plugin.HasInstance)
             return;
 
         var rootNode = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();

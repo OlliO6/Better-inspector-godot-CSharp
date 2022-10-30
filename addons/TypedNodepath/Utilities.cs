@@ -64,6 +64,12 @@ public static class Utilities
         return from;
     }
 
+    public static T DefferedSetted<T>(this T from, string property, object value) where T : Node
+    {
+        from.SetDeferred(property, value);
+        return from;
+    }
+
     public static T Connected<T>(this T from, string signal, Godot.Object to, string method) where T : Node
     {
         from.Connect(signal, to, method);

@@ -2,7 +2,6 @@ using System;
 using Godot;
 using Godot.Collections;
 
-[Tool]
 public class Testing : Node2D
 {
     [Export, TypedPath(typeof(IDamageable))] private NodePath damagae;

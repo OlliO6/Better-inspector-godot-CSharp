@@ -9,7 +9,7 @@ public class Plugin : EditorPlugin
 {
     private static Plugin instance;
     public static Plugin Instance => instance;
-    public static bool hasInstance => IsInstanceValid(instance);
+    public static bool HasInstance => IsInstanceValid(instance);
 
     public InspectorPlugin inspectorPlugin;
 
@@ -17,7 +17,7 @@ public class Plugin : EditorPlugin
 
     public static Texture GetIcon(string name)
     {
-        if (!hasInstance) return null;
+        if (!HasInstance) return null;
 
         return instance.GetEditorInterface().GetBaseControl().Theme.GetIcon(name, "EditorIcons");
     }
@@ -26,7 +26,8 @@ public class Plugin : EditorPlugin
     {
         instance = this;
 
-        AddCustomType("TypedNodePath", "Resource", GD.Load<Script>("res://addons/TypedNodepath/NodePath.cs"), null);
+        GD.Print("NHEW IMSPOECTORR PLUGIN");
+
         AddInspectorPlugin(inspectorPlugin = new());
     }
 
@@ -34,17 +35,25 @@ public class Plugin : EditorPlugin
     {
         instance = null;
 
-        RemoveCustomType("TypedNodePath");
         RemoveInspectorPlugin(inspectorPlugin);
     }
 
     public override void _Process(float delta)
     {
-        if (!hasInstance)
+        if (!HasInstance)
         {
             instance = this;
 
-            // OnBuilded
+            var selection = GetEditorInterface().GetSelection().GetSelectedNodes();
+
+            foreach (Node node in selection)
+            {
+                GetEditorInterface().GetSelection().RemoveNode(node);
+            }
+            foreach (Node node in selection)
+            {
+                GetEditorInterface().GetSelection().AddNode(node);
+            }
         }
     }
 }

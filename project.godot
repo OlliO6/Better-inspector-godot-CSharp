@@ -15,7 +15,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/Iconify/plugin.cfg", "res://addons/TypedNodepath/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/TypedNodepath/plugin.cfg" )
 
 [gui]
 

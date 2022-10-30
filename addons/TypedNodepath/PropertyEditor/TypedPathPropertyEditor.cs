@@ -8,7 +8,7 @@ using Godot;
 [Tool]
 public class TypedPathPropertyEditor : EditorProperty
 {
-    private readonly Type type;
+    private Type type;
 
     private Button assignButton, clearButton;
 
@@ -31,10 +31,19 @@ public class TypedPathPropertyEditor : EditorProperty
         }
     }
 
+    public TypedPathPropertyEditor() { }
+
     public TypedPathPropertyEditor(Type type)
     {
         this.type = type;
+    }
 
+    public override void _Ready()
+    {
+        if (!Plugin.HasInstance)
+            return;
+
+        // Construct property editor buttons
         this.WitchChilds(
             new PanelContainer()
             .Setted("custom_styles/panel", new StyleBoxFlat()
@@ -65,6 +74,7 @@ public class TypedPathPropertyEditor : EditorProperty
 
         AddFocusable(assignButton);
         AddFocusable(clearButton);
+
         RefreshAssignButtonVisual();
 
         assignButton.Connect("pressed", this, nameof(OnAssignPressed));
@@ -76,7 +86,6 @@ public class TypedPathPropertyEditor : EditorProperty
         isUpdating = true;
 
         NodePath property = GetEditedObject().Get(GetEditedProperty()) as NodePath;
-        GD.Print("Prop: ", property);
         Value = property.IsEmptyOrNull() ? null : property;
 
         isUpdating = false;
@@ -106,6 +115,9 @@ public class TypedPathPropertyEditor : EditorProperty
 
     private void RefreshAssignButtonVisual()
     {
+        if (!Plugin.HasInstance || !IsInstanceValid(assignButton))
+            return;
+
         if (Value.IsEmptyOrNull())
         {
             assignButton.Text = "Assign...";
@@ -116,7 +128,7 @@ public class TypedPathPropertyEditor : EditorProperty
         assignButton.Text = Value;
         assignButton.Flat = true;
         Node node = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(Value);
-        assignButton.Icon = Plugin.GetIcon(node != null ? node.GetClass() : null);
+        assignButton.Icon = node != null ? Plugin.GetIcon(node.GetClass()) : null;
     }
 }
 

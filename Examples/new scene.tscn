@@ -1,21 +1,31 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=0]
+[ext_resource path="res://Examples/CoolControl.cs" type="Script" id=1]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 0 )
-damagae = NodePath("Control3")
-anim = NodePath("")
-animTree = NodePath("")
-
-[node name="Control" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+damagae = NodePath("")
+anim = NodePath("Control2")
+animTree = NodePath("Control2")
 
 [node name="Control2" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="Control3" type="Control" parent="Control2"]
+[node name="Control39" type="Control" parent="Control2"]
 margin_right = 40.0
 margin_bottom = 40.0
+
+[node name="CoolControl" type="Control" parent="Control2"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+damagae = NodePath("Control2")
+anim = NodePath("Control2")
