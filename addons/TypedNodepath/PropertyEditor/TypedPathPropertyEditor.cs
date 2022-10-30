@@ -76,9 +76,8 @@ public class TypedPathPropertyEditor : EditorProperty
         isUpdating = true;
 
         NodePath property = GetEditedObject().Get(GetEditedProperty()) as NodePath;
-
-        GD.Print(property);
-        Value = property;
+        GD.Print("Prop: ", property);
+        Value = property.IsEmptyOrNull() ? null : property;
 
         isUpdating = false;
     }
@@ -87,7 +86,7 @@ public class TypedPathPropertyEditor : EditorProperty
     {
         NodePath selectedPath = await StartSelection();
 
-        if (selectedPath != null)
+        if (!selectedPath.IsEmptyOrNull())
             Value = selectedPath;
     }
 
@@ -107,7 +106,7 @@ public class TypedPathPropertyEditor : EditorProperty
 
     private void RefreshAssignButtonVisual()
     {
-        if (Value is null)
+        if (Value.IsEmptyOrNull())
         {
             assignButton.Text = "Assign...";
             assignButton.Flat = false;

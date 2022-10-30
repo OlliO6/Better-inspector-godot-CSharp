@@ -69,4 +69,7 @@ public static class Utilities
         from.Connect(signal, to, method);
         return from;
     }
+
+    public static bool IsEmptyOrNull(this NodePath path) => path == null || path.IsEmpty();
+
 }

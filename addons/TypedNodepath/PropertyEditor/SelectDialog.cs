@@ -111,7 +111,7 @@ public class SelectDialog : ConfirmationDialog
         }
     }
 
-    public NodePath GetSelectedPathResult() => tree.GetSelected().GetText(0);
+    public NodePath GetSelectedPathResult() => tree.GetSelected()?.GetText(0);
 
     public void Confirm()
     {
