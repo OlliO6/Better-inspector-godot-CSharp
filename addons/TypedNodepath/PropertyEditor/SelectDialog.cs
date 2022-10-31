@@ -12,6 +12,7 @@ public class SelectDialog : ConfirmationDialog
     private readonly Type type;
     private Tree tree;
     private LineEdit filterText;
+    private CheckButton showUnownedToggle;
 
     public SelectDialog(Type type)
     {
@@ -32,11 +33,11 @@ public class SelectDialog : ConfirmationDialog
                         RightIcon = Plugin.GetIcon("Search")
                     })
                     .Connected("text_changed", this, nameof(OnFilterTextChanged)),
-                    new CheckButton()
+                    (showUnownedToggle = new CheckButton()
                     {
                         Text = "Show unowned"
                     }
-                    .Connected("toggled", this, nameof(OnShowUnownedNodesToggled))
+                    .Connected("toggled", this, nameof(OnShowUnownedNodesToggled)))
                 ),
                 (tree = new Tree()
                 {
@@ -129,6 +130,8 @@ public class SelectDialog : ConfirmationDialog
 
     private void OnAboutToShow()
     {
+        filterText.Clear();
+        showUnownedToggle.Pressed = false;
         tree.CallDeferred("grab_focus");
         assigning = false;
         UpdateNodeTree();
