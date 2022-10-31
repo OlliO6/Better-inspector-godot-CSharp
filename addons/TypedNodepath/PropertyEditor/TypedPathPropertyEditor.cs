@@ -119,7 +119,7 @@ public class TypedPathPropertyEditor : EditorProperty
 
             if (pointsTo == null)
             {
-                GD.PrintErr("Selected invalid node path: ", selectedPath);
+                GD.PrintErr($"Selected invalid node path: '{selectedPath}'");
                 return;
             }
 

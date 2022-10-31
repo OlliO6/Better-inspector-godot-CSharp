@@ -3,11 +3,12 @@ namespace TypedNodePaths;
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Godot;
 
 public class SelectDialog : ConfirmationDialog
 {
-    private bool assigning;
+    private bool assigning, onlyShowOwnNodes = true;
     private readonly Type type;
     private Tree tree;
     private LineEdit filterText;
@@ -29,12 +30,13 @@ public class SelectDialog : ConfirmationDialog
                         SizeFlagsHorizontal = (int)SizeFlags.ExpandFill,
                         PlaceholderText = "Filter nodes",
                         RightIcon = Plugin.GetIcon("Search")
-                    }),
+                    })
+                    .Connected("text_changed", this, nameof(OnFilterTextChanged)),
                     new CheckButton()
                     {
                         Text = "Show unowned"
                     }
-                    .Connected("toggled", this, nameof(OnShowUnownedNodes))
+                    .Connected("toggled", this, nameof(OnShowUnownedNodesToggled))
                 ),
                 (tree = new Tree()
                 {
@@ -49,6 +51,74 @@ public class SelectDialog : ConfirmationDialog
         GetOk().Connect("pressed", this, nameof(Confirm));
     }
 
+    private void OnFilterTextChanged(string pattern)
+    {
+        UpdateNodeTree();
+        HashSet<TreeItem> dontRemove = new();
+        ExpandAll(tree.GetRoot());
+        FilterRecursive(tree.GetRoot());
+        RemoveNotMatchingNodes(tree.GetRoot());
+        tree.Update();
+
+        void FilterRecursive(TreeItem item)
+        {
+            if (item == null) return;
+
+            TreeItem current = item;
+
+            while (current != null)
+            {
+                if (Regex.IsMatch(current.GetText(0), pattern,
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant))
+                    DontRemove(current);
+
+                FilterRecursive(current.GetChildren());
+                current = current.GetNext();
+            }
+        }
+
+        void DontRemove(TreeItem item)
+        {
+            TreeItem current = item;
+
+            while (current != null)
+            {
+                dontRemove.Add(current);
+                current = current.GetParent();
+            }
+        }
+
+        void ExpandAll(TreeItem item)
+        {
+            if (item == null) return;
+
+            TreeItem current = item;
+
+            while (current != null)
+            {
+                current.Collapsed = false;
+                ExpandAll(current.GetChildren());
+                current = current.GetNext();
+            }
+        }
+
+        void RemoveNotMatchingNodes(TreeItem item)
+        {
+            TreeItem current = item;
+
+            while (current != null)
+            {
+                if (!dontRemove.Contains(current))
+                {
+                    current.GetParent()?.RemoveChild(current);
+                    current.CallDeferred("free");
+                }
+                RemoveNotMatchingNodes(current.GetChildren());
+                current = current.GetNext();
+            }
+        }
+    }
+
     private void OnItemDoubleClicked()
     {
         if (tree.GetSelected() == null) return;
@@ -59,21 +129,18 @@ public class SelectDialog : ConfirmationDialog
 
     private void OnAboutToShow()
     {
+        tree.CallDeferred("grab_focus");
         assigning = false;
         UpdateNodeTree();
     }
 
-    private void OnShowUnownedNodes(bool toggled)
+    private void OnShowUnownedNodesToggled(bool toggled)
     {
-        if (toggled)
-        {
-            UpdateNodeTree(false);
-            return;
-        }
+        onlyShowOwnNodes = !toggled;
         UpdateNodeTree();
     }
 
-    private void UpdateNodeTree(bool onlyOwnNodes = true)
+    private void UpdateNodeTree()
     {
         if (!Plugin.HasInstance)
             return;
@@ -105,7 +172,7 @@ public class SelectDialog : ConfirmationDialog
             {
                 if (child.Owner != rootNode)
                 {
-                    if (onlyOwnNodes)
+                    if (onlyShowOwnNodes)
                     {
                         if (treeItem.HasMeta("Instanced"))
                             AddNodeRecursive(tree, tree.CreateItem(treeItem), child, true);
@@ -144,16 +211,16 @@ public class SelectDialog : ConfirmationDialog
                 treeItem.SetCustomColor(0,
                     currentUnowned ? Colors.DarkSlateGray : Colors.DimGray);
             }
+        }
 
-            static void Expand(TreeItem item)
+        static void Expand(TreeItem item)
+        {
+            TreeItem current = item.GetParent();
+
+            while (current != null && current.Collapsed)
             {
-                TreeItem current = item.GetParent();
-
-                while (current != null && current.Collapsed)
-                {
-                    current.Collapsed = false;
-                    current = current.GetParent();
-                }
+                current.Collapsed = false;
+                current = current.GetParent();
             }
         }
     }
