@@ -6,14 +6,14 @@ using Godot;
 
 public static class Utilities
 {
-    public static Type GetInEditorTypeOf(Godot.Object node)
+    public static Type GetInEditorTypeOf(Godot.Object obj)
     {
-        Type type = node.GetType();
+        Type type = obj.GetType();
 
         if (type.GetCustomAttribute(typeof(ToolAttribute)) != null)
             return type;
 
-        CSharpScript script = node.GetScript() as CSharpScript;
+        CSharpScript script = obj.GetScript() as CSharpScript;
 
         if (script is null) return type;
 

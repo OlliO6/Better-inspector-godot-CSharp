@@ -40,6 +40,7 @@ public class SelectDialog : ConfirmationDialog
                     SizeFlagsVertical = (int)SizeFlags.ExpandFill,
                     SelectMode = Tree.SelectModeEnum.Single
                 })
+                .Connected("item_double_clicked", this, nameof(OnItemDoubleClicked))
             )
         );
 
@@ -47,6 +48,11 @@ public class SelectDialog : ConfirmationDialog
         GetCancel().Connect("pressed", this, nameof(Cancel));
         GetCloseButton().Connect("pressed", this, nameof(Cancel));
         GetOk().Connect("pressed", this, nameof(Confirm));
+    }
+
+    private void OnItemDoubleClicked()
+    {
+        Hide();
     }
 
     private void OnAboutToShow()
@@ -72,45 +78,59 @@ public class SelectDialog : ConfirmationDialog
         var rootNode = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();
 
         // Get instanced Nodes with editable children
-        var editablePaths = GD.Load<PackedScene>(rootNode.Filename)._Bundled["editable_instances"] as Godot.Collections.Array;
-        List<Node> editableNodes = new(editablePaths.Count);
+        PackedScene packedScene = GD.Load<PackedScene>(rootNode.Filename);
+        List<Node> editableNodes = new();
 
-        foreach (NodePath path in editablePaths)
-            editableNodes.Add(rootNode.GetNode(path));
+        if (packedScene != null)
+        {
+            var editablePaths = packedScene._Bundled["editable_instances"] as Godot.Collections.Array;
+
+            foreach (NodePath path in editablePaths)
+                editableNodes.Add(rootNode.GetNode(path));
+        }
 
         tree.Clear();
         var rootItem = tree.CreateItem();
         AddNodeRecursive(tree, rootItem, rootNode);
 
-        void AddNodeRecursive(Tree tree, TreeItem treeItem, Node node)
+        void AddNodeRecursive(Tree tree, TreeItem treeItem, Node node, bool currentUnowned = false)
         {
-            treeItem.Collapsed = node.IsDisplayedFolded();
-            treeItem.SetText(0, node.Name);
-            treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
-
-            if ((node.Owner != rootNode && node != rootNode) ||
-                    (treeItem.GetParent() != null && (bool)treeItem.GetParent().HasMeta("Instanced")))
-            {
-                treeItem.Collapsed = true;
-                treeItem.SetCustomColor(0, Colors.LightSteelBlue);
-            }
-
-            if (editableNodes.Contains(node) ||
-                    (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced")))
-            {
-                treeItem.SetMeta("Instanced", true);
-            }
+            ProcessNode(treeItem, node, currentUnowned);
 
             foreach (Node child in node.GetChildren())
             {
-                if ((onlyOwnNodes && child.Owner != rootNode))
+                if (child.Owner != rootNode)
                 {
-                    if (treeItem.HasMeta("Instanced"))
-                        AddNodeRecursive(tree, tree.CreateItem(treeItem), child);
-
+                    if (onlyOwnNodes)
+                    {
+                        if (treeItem.HasMeta("Instanced"))
+                            AddNodeRecursive(tree, tree.CreateItem(treeItem), child, true);
+                        continue;
+                    }
+                    AddNodeRecursive(tree, tree.CreateItem(treeItem), child, true);
                     continue;
                 }
-                AddNodeRecursive(tree, tree.CreateItem(treeItem), child);
+                AddNodeRecursive(tree, tree.CreateItem(treeItem), child, currentUnowned);
+            }
+
+            void ProcessNode(TreeItem treeItem, Node node, bool currentUnowned)
+            {
+                Type nodeType = Utilities.GetInEditorTypeOf(node);
+
+                bool tyeAssignable = type.IsAssignableFrom(nodeType);
+
+                treeItem.Collapsed = false;
+                treeItem.SetText(0, node.Name);
+                treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
+                treeItem.SetEditable(0, false);
+                treeItem.SetSelectable(0, tyeAssignable);
+
+                if (editableNodes.Contains(node) ||
+                        (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced")))
+                    treeItem.SetMeta("Instanced", true);
+
+                treeItem.SetCustomColor(0, currentUnowned ? (tyeAssignable ? Colors.LightSteelBlue : Colors.DarkSlateGray) :
+                        (tyeAssignable ? Colors.White : Colors.DimGray));
             }
         }
     }

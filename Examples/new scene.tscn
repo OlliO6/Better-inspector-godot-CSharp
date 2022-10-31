@@ -5,7 +5,7 @@
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 0 )
-damagae = NodePath("")
+damagae = NodePath("Control2")
 anim = NodePath("Control2")
 animTree = NodePath("Control2")
 
@@ -29,3 +29,7 @@ __meta__ = {
 }
 damagae = NodePath("Control2")
 anim = NodePath("Control2")
+
+[node name="Tree" type="Tree" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
