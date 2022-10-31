@@ -95,6 +95,7 @@ public class SelectDialog : ConfirmationDialog
         tree.Clear();
         var rootItem = tree.CreateItem();
         AddNodeRecursive(tree, rootItem, rootNode);
+        rootItem.Collapsed = false;
 
         void AddNodeRecursive(Tree tree, TreeItem treeItem, Node node, bool currentUnowned = false)
         {
