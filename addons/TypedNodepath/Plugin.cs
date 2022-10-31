@@ -26,8 +26,6 @@ public class Plugin : EditorPlugin
     {
         instance = this;
 
-        GD.Print("NHEW IMSPOECTORR PLUGIN");
-
         AddInspectorPlugin(inspectorPlugin = new());
     }
 

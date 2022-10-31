@@ -119,10 +119,9 @@ public class SelectDialog : ConfirmationDialog
             void ProcessNode(TreeItem treeItem, Node node, bool currentUnowned)
             {
                 Type nodeType = node.GetInEditorType();
-
                 bool tyeAssignable = type.IsAssignableFrom(nodeType);
 
-                treeItem.Collapsed = false;
+                treeItem.Collapsed = true;
                 treeItem.SetText(0, node.Name);
                 treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
                 treeItem.SetEditable(0, false);
@@ -132,8 +131,28 @@ public class SelectDialog : ConfirmationDialog
                         (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced")))
                     treeItem.SetMeta("Instanced", true);
 
-                treeItem.SetCustomColor(0, currentUnowned ? (tyeAssignable ? Colors.LightSteelBlue : Colors.DarkSlateGray) :
-                        (tyeAssignable ? Colors.White : Colors.DimGray));
+                if (tyeAssignable)
+                {
+                    Expand(treeItem);
+
+                    treeItem.SetCustomColor(0,
+                        currentUnowned ? Colors.LightSteelBlue : Colors.White);
+                    return;
+                }
+
+                treeItem.SetCustomColor(0,
+                    currentUnowned ? Colors.DarkSlateGray : Colors.DimGray);
+            }
+
+            static void Expand(TreeItem item)
+            {
+                TreeItem current = item.GetParent();
+
+                while (current != null && current.Collapsed)
+                {
+                    current.Collapsed = false;
+                    current = current.GetParent();
+                }
             }
         }
     }
