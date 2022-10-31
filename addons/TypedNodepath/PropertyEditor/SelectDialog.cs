@@ -177,7 +177,7 @@ public class SelectDialog : ConfirmationDialog
                 {
                     if (onlyShowOwnNodes)
                     {
-                        if (treeItem.HasMeta("Instanced"))
+                        if (treeItem.HasMeta("Instanced") && child.Owner == treeItem.GetMeta("Instanced"))
                             AddNodeRecursive(tree, tree.CreateItem(treeItem), child, true);
                         continue;
                     }
@@ -198,9 +198,11 @@ public class SelectDialog : ConfirmationDialog
                 treeItem.SetEditable(0, false);
                 treeItem.SetSelectable(0, tyeAssignable);
 
-                if (editableNodes.Contains(node) ||
-                        (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced")))
-                    treeItem.SetMeta("Instanced", true);
+                if (editableNodes.Contains(node))
+                    treeItem.SetMeta("Instanced", node);
+
+                else if (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced"))
+                    treeItem.SetMeta("Instanced", treeItem.GetParent().GetMeta("Instanced"));
 
                 if (tyeAssignable)
                 {
