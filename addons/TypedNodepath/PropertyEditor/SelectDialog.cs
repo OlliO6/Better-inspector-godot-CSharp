@@ -7,6 +7,7 @@ using Godot;
 
 public class SelectDialog : ConfirmationDialog
 {
+    private bool assigning;
     private readonly Type type;
     private Tree tree;
     private LineEdit filterText;
@@ -40,23 +41,23 @@ public class SelectDialog : ConfirmationDialog
                     SizeFlagsVertical = (int)SizeFlags.ExpandFill,
                     SelectMode = Tree.SelectModeEnum.Single
                 })
-                .Connected("item_double_clicked", this, nameof(OnItemDoubleClicked))
+                .Connected("item_activated", this, nameof(OnItemDoubleClicked))
             )
         );
 
         this.Connect("about_to_show", this, nameof(OnAboutToShow));
-        GetCancel().Connect("pressed", this, nameof(Cancel));
-        GetCloseButton().Connect("pressed", this, nameof(Cancel));
         GetOk().Connect("pressed", this, nameof(Confirm));
     }
 
     private void OnItemDoubleClicked()
     {
+        assigning = true;
         Hide();
     }
 
     private void OnAboutToShow()
     {
+        assigning = false;
         UpdateNodeTree();
     }
 
@@ -122,7 +123,7 @@ public class SelectDialog : ConfirmationDialog
                 treeItem.Collapsed = false;
                 treeItem.SetText(0, node.Name);
                 treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
-                treeItem.SetEditable(0, false);
+                // treeItem.SetEditable(0, false);
                 treeItem.SetSelectable(0, tyeAssignable);
 
                 if (editableNodes.Contains(node) ||
@@ -135,14 +136,17 @@ public class SelectDialog : ConfirmationDialog
         }
     }
 
-    public NodePath GetSelectedPathResult() => tree.GetSelected()?.GetText(0);
+    public NodePath GetSelectedPathResult()
+    {
+        if (assigning)
+            return tree.GetSelected()?.GetText(0);
+
+        return null;
+    }
 
     public void Confirm()
     {
-    }
-
-    public void Cancel()
-    {
+        assigning = true;
     }
 }
 
