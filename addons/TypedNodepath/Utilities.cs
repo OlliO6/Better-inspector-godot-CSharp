@@ -6,7 +6,7 @@ using Godot;
 
 public static class Utilities
 {
-    public static Type GetInEditorTypeOf(Godot.Object obj)
+    public static Type GetInEditorType(this Godot.Object obj)
     {
         Type type = obj.GetType();
 

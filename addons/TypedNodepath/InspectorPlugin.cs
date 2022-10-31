@@ -14,7 +14,7 @@ public class InspectorPlugin : EditorInspectorPlugin
 
     public override void ParseBegin(Godot.Object @object)
     {
-        cachedType = Utilities.GetInEditorTypeOf(@object);
+        cachedType = @object.GetInEditorType();
     }
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)

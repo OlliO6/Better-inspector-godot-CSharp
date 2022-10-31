@@ -13,9 +13,7 @@ border_width_bottom = 27
 [node name="Node2D" type="Node2D"]
 modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
-damagae = NodePath("DamageableArea")
-anim = NodePath("AnimationPlay")
-animTree = NodePath("ConfirmationDialog")
+anim = NodePath("ConfirmationDialog/Tree")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )
@@ -41,8 +39,6 @@ margin_top = 22.0
 margin_right = 155.0
 margin_bottom = 46.0
 
-[node name="AnimationPlay" type="AnimationPlayer" parent="."]
-
 [node name="AnimationPlay2" type="AnimationPlayer" parent="."]
 
 [node name="TextEdit" type="TextEdit" parent="."]
@@ -64,6 +60,9 @@ margin_left = 8.0
 margin_top = 8.0
 margin_right = 192.0
 margin_bottom = 34.0
+
+[node name="AnimationPlay" type="AnimationPlayer" parent="ConfirmationDialog/Tree"]
+root_node = NodePath("../../..")
 
 [node name="Control" type="Control" parent="."]
 unique_name_in_owner = true

@@ -5,8 +5,7 @@ using Godot.Collections;
 public class Testing : Node2D
 {
     [Export, TypedPath(typeof(IDamageable))] private NodePath damagae;
-    [Export, TypedPath(typeof(AnimationPlayer))] private NodePath anim;
-    [Export] private NodePath animTree;
+    [Export, TypedPath(typeof(Tree))] private NodePath anim;
     [Export] private PackedScene number;
 
     // public override Godot.Collections.Array _GetPropertyList()

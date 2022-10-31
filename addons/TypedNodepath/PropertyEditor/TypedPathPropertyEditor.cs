@@ -86,8 +86,20 @@ public class TypedPathPropertyEditor : EditorProperty
         isUpdating = true;
 
         NodePath property = GetEditedObject().Get(GetEditedProperty()) as NodePath;
-        Value = property.IsEmptyOrNull() ? null : property;
 
+        if (GetEditedObject() is Node editedNode && property != null)
+        {
+            Node pointsTo = editedNode.GetNodeOrNull(property);
+
+            if (!type.IsAssignableFrom(pointsTo?.GetInEditorType()))
+            {
+                isUpdating = false;
+                Value = null;
+                return;
+            }
+        }
+
+        Value = property.IsEmptyOrNull() ? null : property;
         isUpdating = false;
     }
 
@@ -96,7 +108,23 @@ public class TypedPathPropertyEditor : EditorProperty
         NodePath selectedPath = await StartSelection();
 
         if (!selectedPath.IsEmptyOrNull())
-            Value = selectedPath;
+        {
+            if (GetEditedObject() is not Node editedNode || !Plugin.HasInstance)
+            {
+                Value = selectedPath;
+                return;
+            }
+
+            Node pointsTo = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(selectedPath);
+
+            if (pointsTo == null)
+            {
+                GD.PrintErr("Selected invalid node path: ", selectedPath);
+                return;
+            }
+
+            Value = editedNode.GetPathTo(pointsTo);
+        }
     }
 
     private async Task<NodePath> StartSelection()
@@ -125,10 +153,22 @@ public class TypedPathPropertyEditor : EditorProperty
             assignButton.Icon = null;
             return;
         }
-        assignButton.Text = Value;
+
+        Node from = (GetEditedObject() is Node editedNodee) ? editedNodee : Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();
+
+        Node node = from.GetNodeOrNull(Value);
+
         assignButton.Flat = true;
-        Node node = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot().GetNodeOrNull(Value);
-        assignButton.Icon = node != null ? Plugin.GetIcon(node.GetClass()) : null;
+        assignButton.HintTooltip = Value;
+
+        if (node == null)
+        {
+            assignButton.Text = Value;
+            return;
+        }
+
+        assignButton.Text = node.Name;
+        assignButton.Icon = Plugin.GetIcon(node.GetClass());
     }
 }
 

@@ -51,6 +51,8 @@ public class SelectDialog : ConfirmationDialog
 
     private void OnItemDoubleClicked()
     {
+        if (tree.GetSelected() == null) return;
+
         assigning = true;
         Hide();
     }
@@ -116,14 +118,14 @@ public class SelectDialog : ConfirmationDialog
 
             void ProcessNode(TreeItem treeItem, Node node, bool currentUnowned)
             {
-                Type nodeType = Utilities.GetInEditorTypeOf(node);
+                Type nodeType = node.GetInEditorType();
 
                 bool tyeAssignable = type.IsAssignableFrom(nodeType);
 
                 treeItem.Collapsed = false;
                 treeItem.SetText(0, node.Name);
                 treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
-                // treeItem.SetEditable(0, false);
+                treeItem.SetEditable(0, false);
                 treeItem.SetSelectable(0, tyeAssignable);
 
                 if (editableNodes.Contains(node) ||
@@ -138,10 +140,27 @@ public class SelectDialog : ConfirmationDialog
 
     public NodePath GetSelectedPathResult()
     {
-        if (assigning)
-            return tree.GetSelected()?.GetText(0);
+        TreeItem selected = tree.GetSelected();
+
+        if (assigning && selected != null)
+            return GetPathTo(tree.GetSelected());
 
         return null;
+
+        static NodePath GetPathTo(TreeItem item)
+        {
+            string path = string.Empty;
+
+            TreeItem current = item;
+
+            while (current.GetParent() != null)
+            {
+                path = path.Insert(0, current.GetText(0) + "/");
+                current = current.GetParent();
+            }
+
+            return path;
+        }
     }
 
     public void Confirm()
