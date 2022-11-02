@@ -41,8 +41,12 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         FieldInfo field = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
         Foldout foldout = null;
-        string foldoutName = CheckForFoldout(propName);
+        string foldoutName = CheckForFoldout(propName, out bool isExpressionProperty);
         prevFoldoutName = foldoutName;
+
+        // Hide if the property is one starting with "_StartF_" or "_EndF_"
+        if (isExpressionProperty)
+            return true;
 
         if (foldoutName != "")
         {
@@ -51,19 +55,27 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
             foldout.properties.Add(path);
         }
 
+        // Hide when foldout is collapsed
         if (foldout != null && foldout.isCollapsed)
             return true;
 
         return false;
 
-        string CheckForFoldout(string propName)
+        string CheckForFoldout(string propName, out bool isExpressionProperty)
         {
             if (propName.StartsWith("_StartF_"))
+            {
+                isExpressionProperty = true;
                 return propName.LStrip("_StartF_").Capitalize();
+            }
 
             if (propName.StartsWith("_EndF_"))
+            {
+                isExpressionProperty = true;
                 return "";
+            }
 
+            isExpressionProperty = false;
             return prevFoldoutName;
         }
 
