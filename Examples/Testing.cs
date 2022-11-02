@@ -6,6 +6,8 @@ using Godot.Collections;
 public class Testing : Node2D
 {
     event Action Event;
+    [Export] private float value;
+    [Export] private float value2;
     [Export] bool _StartF_References;
     [Export, TypedPath(typeof(IDamageable))] private NodePath damagae;
     [Export, TypedPath(typeof(Tree))] private NodePath anim;
@@ -14,6 +16,8 @@ public class Testing : Node2D
     [Export] private PackedScene number3;
     [Export] private PackedScene number4;
     [Export] bool _EndF_;
+    [Export] private float value3;
+    [Export] private float value4;
 
     // public override Godot.Collections.Array _GetPropertyList()
     // {

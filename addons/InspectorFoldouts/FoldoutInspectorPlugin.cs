@@ -56,9 +56,13 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         }
 
         // Hide when foldout is collapsed
-        if (foldout != null && foldout.isCollapsed)
-            return true;
+        if (foldout != null)
+        {
+            if (foldout.isCollapsed)
+                return true;
 
+            AddCustomControl(new IndentionBuilder());
+        }
         return false;
 
         string CheckForFoldout(string propName, out bool isExpressionProperty)
