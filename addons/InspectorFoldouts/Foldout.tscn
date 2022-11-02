@@ -6,30 +6,22 @@
 [sub_resource type="StyleBoxEmpty" id=5]
 content_margin_left = 4.0
 
-[node name="VBoxContainer" type="VBoxContainer"]
+[node name="Foldout" type="Control"]
 margin_right = 18.0
 margin_bottom = 18.0
-size_flags_vertical = 9
-custom_constants/separation = 0
-script = ExtResource( 1 )
-contentContainerPath = NodePath("HSplitContainer/VBoxContainer")
-checkBoxPath = NodePath("CheckBoxHolder/CheckBox")
-
-[node name="CheckBoxHolder" type="Control" parent="."]
-margin_right = 18.0
-margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
-hint_tooltip = "Expand/Collapse"
-size_flags_vertical = 2
+size_flags_vertical = 9
+script = ExtResource( 1 )
+checkBoxPath = NodePath("CheckBox")
 
-[node name="ColorRect" type="ColorRect" parent="CheckBoxHolder"]
+[node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 size_flags_vertical = 2
 color = Color( 0.2, 0.219608, 0.278431, 1 )
 
-[node name="CheckBox" type="CheckBox" parent="CheckBoxHolder"]
+[node name="CheckBox" type="CheckBox" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -4.0
@@ -41,40 +33,3 @@ theme = ExtResource( 2 )
 custom_styles/hover_pressed = SubResource( 5 )
 action_mode = 0
 enabled_focus_mode = 0
-text = "Example"
-
-[node name="Control" type="HBoxContainer" parent="."]
-visible = false
-margin_top = 20.0
-margin_right = 18.0
-margin_bottom = 20.0
-
-[node name="Space" type="Control" parent="Control"]
-margin_right = 10.0
-rect_min_size = Vector2( 10, 0 )
-
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
-margin_top = 20.0
-margin_right = 18.0
-margin_bottom = 20.0
-collapsed = true
-
-[node name="Space" type="Control" parent="HSplitContainer"]
-margin_right = 6.0
-rect_min_size = Vector2( 6, 0 )
-
-[node name="ColorRect" type="ColorRect" parent="HSplitContainer/Space"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_bottom = -4.0
-rect_min_size = Vector2( 2.087, 18.493 )
-color = Color( 0.2, 0.219608, 0.278431, 1 )
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
-margin_left = 18.0
-margin_right = 18.0
-__meta__ = {
-"_editor_description_": "This Contains all the property editors
-"
-}
