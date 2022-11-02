@@ -1,6 +1,9 @@
-using System;
+namespace BetterInspector;
 
-[AttributeUsage(AttributeTargets.Field)]
+using System;
+using System.Diagnostics;
+
+[AttributeUsage(AttributeTargets.Field), Conditional("TOOLS")]
 public sealed class TypedPathAttribute : Attribute
 {
     public readonly Type type;

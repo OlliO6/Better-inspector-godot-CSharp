@@ -14,7 +14,7 @@ config/name="TypedExports"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/TypedNodepath/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/InspectorFoldouts/plugin.cfg", "res://addons/TypedNodepath/plugin.cfg" )
 
 [gui]
 

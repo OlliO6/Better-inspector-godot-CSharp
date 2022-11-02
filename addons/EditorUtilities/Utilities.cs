@@ -1,4 +1,4 @@
-namespace TypedNodePaths;
+namespace BetterInspector;
 
 using System;
 using System.Reflection;

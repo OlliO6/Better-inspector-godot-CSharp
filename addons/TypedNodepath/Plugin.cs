@@ -1,5 +1,5 @@
 #if TOOLS
-namespace TypedNodePaths;
+namespace BetterInspector.TypedNodePaths;
 
 using System;
 using Godot;
