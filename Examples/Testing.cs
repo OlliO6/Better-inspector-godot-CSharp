@@ -10,6 +10,9 @@ public class Testing : Node2D
     [Export, TypedPath(typeof(IDamageable))] private NodePath damagae;
     [Export, TypedPath(typeof(Tree))] private NodePath anim;
     [Export] private PackedScene number;
+    [Export] private PackedScene number2;
+    [Export] private PackedScene number3;
+    [Export] private PackedScene number4;
     [Export] bool _EndF_;
 
     // public override Godot.Collections.Array _GetPropertyList()

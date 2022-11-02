@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Godot;
+// using Godot.Collections;
 
 [Tool]
 public class FoldoutInspectorPlugin : EditorInspectorPlugin
@@ -41,14 +42,12 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
         Foldout foldout = null;
         string foldoutName = CheckForFoldout(propName);
-
         prevFoldoutName = foldoutName;
 
         if (foldoutName != "")
         {
             CreateFoldoutIfNeeded(foldoutName);
             foldout = currentFoldouts[foldoutName];
-
             foldout.properties.Add(path);
         }
 

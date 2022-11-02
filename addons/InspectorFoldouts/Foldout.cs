@@ -16,6 +16,8 @@ public class Foldout : Godot.Object
     public readonly FoldoutInspectorPlugin fouldoutInspector;
     public List<string> properties = new();
 
+    private Foldout() { }
+
     public Foldout(FoldoutInspectorPlugin fouldoutInspector, Godot.Object forObj, bool isCollapsed, string name)
     {
         this.fouldoutInspector = fouldoutInspector;
