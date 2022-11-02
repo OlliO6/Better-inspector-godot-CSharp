@@ -99,14 +99,6 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         }
     }
 
-    public override void ParseEnd()
-    {
-        foreach (var item in currentFoldouts)
-        {
-            GD.Print($"{item.Key}/{item.Value.name}: \n    Collapsed:{item.Value.isCollapsed}\n    Properties: {{\n{new Godot.Collections.Array(item.Value.properties)}\n}}");
-        }
-    }
-
     public void OnFoldoutToggled(Foldout sender, bool toggled)
     {
         sender.isCollapsed = toggled;
