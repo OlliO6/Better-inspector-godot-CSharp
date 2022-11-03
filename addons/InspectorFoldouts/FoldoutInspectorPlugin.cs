@@ -10,7 +10,6 @@ using Godot;
 [Tool]
 public class FoldoutInspectorPlugin : EditorInspectorPlugin
 {
-    private Dictionary<Godot.Object, Type> cachedTypeFor = new();
     private Dictionary<Godot.Object, string> prevFoldoutNameFor = new();
     private Dictionary<Godot.Object, Dictionary<string, Foldout>> currentFoldoutsFor = new();
 
@@ -18,8 +17,6 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
     public override void ParseBegin(Godot.Object @object)
     {
-        cachedTypeFor.AddOrSet(@object, @object.GetInEditorType());
-
         prevFoldoutNameFor.AddOrSet(@object, "");
 
         Dictionary<string, Foldout> prevFoldouts = currentFoldoutsFor.GetOrDefault(@object, null);
@@ -40,8 +37,6 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
         string propName = path.GetFile();
-        FieldInfo field = cachedTypeFor[@object].GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
         Foldout foldout = null;
         string foldoutName = CheckForFoldout(propName, out bool isExpressionProperty);
         prevFoldoutNameFor[@object] = foldoutName;
@@ -99,17 +94,9 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         }
     }
 
-    public override void ParseEnd()
-    {
-        // cachedTypeFor.Remove(@ob);
-        GD.Print("Endeed");
-    }
-
     public void OnFoldoutToggled(Foldout sender, bool toggled)
     {
         sender.isCollapsed = toggled;
-        // Redraw inspector for the object where the foldout was toggled
-        // sender.forObj.PropertyListChangedNotify();
     }
 }
 
