@@ -10,22 +10,25 @@ public class FoldoutContainer : VBoxContainer
     public event Action<bool> Toggled;
 
     private string foldoutName;
+    private bool collapsed;
 
-    [Export, TypedPath(typeof(CheckBox))] private NodePath checkBoxPath;
     [Export, TypedPath(typeof(Button))] private NodePath foldButtonPath;
     [Export, TypedPath(typeof(Container))] private NodePath contentPath;
 
-    private CheckBox _checkBox;
     private Button _foldButton;
     private Container _contentContainer;
 
     public bool IsCollapsed
     {
-        get => CheckBox.Pressed;
-        set => CheckBox.Pressed = value;
+        get => collapsed;
+        set
+        {
+            collapsed = value;
+
+            OnCollapsedToggled(value);
+        }
     }
 
-    public CheckBox CheckBox => _checkBox ??= GetNode<CheckBox>(checkBoxPath);
     public Button FoldButton => _foldButton ??= GetNode<Button>(foldButtonPath);
     public Container ContentContainer => _contentContainer ??= GetNode<Container>(contentPath);
 
@@ -35,21 +38,28 @@ public class FoldoutContainer : VBoxContainer
         set
         {
             foldoutName = value;
-            if (CheckBox != null) CheckBox.Text = value;
+
+            if (FoldButton != null)
+                FoldButton.Text = value;
         }
     }
 
     public override void _Ready()
     {
-        CheckBox.Text = FoldoutName;
-        CheckBox.Connect("toggled", this, nameof(OnCollapsedToggled));
+        FoldButton.Text = FoldoutName;
+        FoldButton.Connect("pressed", this, nameof(Toggle));
 
         OnCollapsedToggled(IsCollapsed);
     }
 
+    private void Toggle()
+    {
+        IsCollapsed = !IsCollapsed;
+    }
+
     private void OnCollapsedToggled(bool toggled)
     {
-        Toggled(toggled);
+        Toggled?.Invoke(toggled);
         ContentContainer.Visible = !toggled;
 
         FoldButton.Icon = Plugin.GetIcon(toggled ? "GuiTreeArrowRight" : "GuiTreeArrowDown");
