@@ -1,6 +1,8 @@
 namespace BetterInspector;
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using Godot;
 
@@ -78,4 +80,23 @@ public static class Utilities
 
     public static bool IsEmptyOrNull(this NodePath path) => path == null || path.IsEmpty();
 
+
+    public static void AddOrSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
+    {
+        if (!dict.ContainsKey(key))
+        {
+            dict.Add(key, value);
+            return;
+        }
+
+        dict[key] = value;
+    }
+
+    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue @default)
+    {
+        if (dict.ContainsKey(key))
+            return dict[key];
+
+        return @default;
+    }
 }

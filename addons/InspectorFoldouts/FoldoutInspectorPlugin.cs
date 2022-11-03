@@ -10,25 +10,27 @@ using Godot;
 [Tool]
 public class FoldoutInspectorPlugin : EditorInspectorPlugin
 {
-    private Type cachedType = null;
-    private string prevFoldoutName;
-    private Dictionary<string, Foldout> currentFoldouts;
+    private Dictionary<Godot.Object, Type> cachedTypeFor = new();
+    private Dictionary<Godot.Object, string> prevFoldoutNameFor = new();
+    private Dictionary<Godot.Object, Dictionary<string, Foldout>> currentFoldoutsFor = new();
 
     public override bool CanHandle(Godot.Object @object) => true;
 
     public override void ParseBegin(Godot.Object @object)
     {
-        cachedType = @object.GetInEditorType();
-        prevFoldoutName = "";
+        cachedTypeFor.AddOrSet(@object, @object.GetInEditorType());
 
-        Dictionary<string, Foldout> prevFoldouts = currentFoldouts;
-        currentFoldouts = new();
+        prevFoldoutNameFor.AddOrSet(@object, "");
+
+        Dictionary<string, Foldout> prevFoldouts = currentFoldoutsFor.GetOrDefault(@object, null);
+
+        currentFoldoutsFor.AddOrSet(@object, new());
 
         if (prevFoldouts == null) return;
 
         foreach (string item in prevFoldouts.Keys)
         {
-            currentFoldouts.Add(item, new Foldout(
+            currentFoldoutsFor[@object].Add(item, new Foldout(
                 this, @object,
                 prevFoldouts[item].isCollapsed,
                 prevFoldouts[item].name));
@@ -38,11 +40,11 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
         string propName = path.GetFile();
-        FieldInfo field = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        FieldInfo field = cachedTypeFor[@object].GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
         Foldout foldout = null;
         string foldoutName = CheckForFoldout(propName, out bool isExpressionProperty);
-        prevFoldoutName = foldoutName;
+        prevFoldoutNameFor[@object] = foldoutName;
 
         // Hide if the property is one starting with "_StartF_" or "_EndF_"
         if (isExpressionProperty)
@@ -51,15 +53,15 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         if (foldoutName != "")
         {
             CreateFoldoutIfNeeded(foldoutName);
-            foldout = currentFoldouts[foldoutName];
+            foldout = currentFoldoutsFor[@object][foldoutName];
             foldout.properties.Add(path);
         }
 
-        // Hide when foldout is collapsed
         if (foldout != null)
         {
             AddCustomControl(new FoldoutContentAdder(foldout.container));
         }
+        GD.Print(path);
 
         return false;
 
@@ -78,23 +80,29 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
             }
 
             isExpressionProperty = false;
-            return prevFoldoutName;
+            return prevFoldoutNameFor[@object];
         }
 
         void CreateFoldoutIfNeeded(string foldoutName)
         {
-            if (!currentFoldouts.ContainsKey(foldoutName))
+            if (!currentFoldoutsFor[@object].ContainsKey(foldoutName))
             {
-                currentFoldouts.Add(foldoutName, new Foldout(this, @object, true, foldoutName));
-                currentFoldouts[foldoutName].Construct();
+                currentFoldoutsFor[@object].Add(foldoutName, new Foldout(this, @object, true, foldoutName));
+                currentFoldoutsFor[@object][foldoutName].Construct();
                 return;
             }
 
-            if (currentFoldouts[foldoutName].container == null)
+            if (currentFoldoutsFor[@object][foldoutName].container == null)
             {
-                currentFoldouts[foldoutName].Construct();
+                currentFoldoutsFor[@object][foldoutName].Construct();
             }
         }
+    }
+
+    public override void ParseEnd()
+    {
+        // cachedTypeFor.Remove(@ob);
+        GD.Print("Endeed");
     }
 
     public void OnFoldoutToggled(Foldout sender, bool toggled)

@@ -11,6 +11,14 @@ public class Plugin : EditorPlugin
 
     private FoldoutInspectorPlugin inspectorPlugin;
 
+    public static Texture GetIcon(string name)
+    {
+        if (!IsInstanceValid(instance))
+            return null;
+
+        return instance.GetEditorInterface().GetBaseControl().Theme.GetIcon(name, "EditorIcons");
+    }
+
     public override void _EnterTree()
     {
         inspectorPlugin = new();

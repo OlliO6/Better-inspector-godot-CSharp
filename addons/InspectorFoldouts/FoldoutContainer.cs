@@ -12,9 +12,11 @@ public class FoldoutContainer : VBoxContainer
     private string foldoutName;
 
     [Export, TypedPath(typeof(CheckBox))] private NodePath checkBoxPath;
+    [Export, TypedPath(typeof(Button))] private NodePath foldButtonPath;
     [Export, TypedPath(typeof(Container))] private NodePath contentPath;
 
     private CheckBox _checkBox;
+    private Button _foldButton;
     private Container _contentContainer;
 
     public bool IsCollapsed
@@ -24,6 +26,7 @@ public class FoldoutContainer : VBoxContainer
     }
 
     public CheckBox CheckBox => _checkBox ??= GetNode<CheckBox>(checkBoxPath);
+    public Button FoldButton => _foldButton ??= GetNode<Button>(foldButtonPath);
     public Container ContentContainer => _contentContainer ??= GetNode<Container>(contentPath);
 
     public string FoldoutName
@@ -46,6 +49,8 @@ public class FoldoutContainer : VBoxContainer
     {
         Toggled(toggled);
         ContentContainer.Visible = !toggled;
+
+        FoldButton.Icon = Plugin.GetIcon(toggled ? "GuiTreeArrowRight" : "GuiTreeArrowDown");
     }
 
     public void AddContent(Control content)

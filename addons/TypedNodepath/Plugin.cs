@@ -13,8 +13,6 @@ public class Plugin : EditorPlugin
 
     public InspectorPlugin inspectorPlugin;
 
-    public string[] icons;
-
     public static Texture GetIcon(string name)
     {
         if (!HasInstance) return null;

@@ -10,6 +10,7 @@ rect_min_size = Vector2( 0, 20 )
 size_flags_vertical = 9
 script = ExtResource( 1 )
 checkBoxPath = NodePath("MarginContainer/CheckBox")
+foldButtonPath = NodePath("HBoxContainer/Button")
 contentPath = NodePath("HBoxContainer/VBoxContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -38,17 +39,16 @@ theme = ExtResource( 2 )
 action_mode = 0
 enabled_focus_mode = 0
 
-[node name="Button" type="Button" parent="MarginContainer"]
-visible = false
-margin_left = 2.0
-margin_right = 89.0
-margin_bottom = 20.0
-text = "Fouldout"
-
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_top = 20.0
 margin_right = 89.0
 margin_bottom = 20.0
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+visible = false
+margin_right = 68.0
+margin_bottom = 20.0
+text = "Fouldout"
 
 [node name="Indention" type="Control" parent="HBoxContainer"]
 margin_right = 10.0
