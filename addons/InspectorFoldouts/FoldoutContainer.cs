@@ -43,6 +43,8 @@ public class FoldoutContainer : VBoxContainer
     {
         CheckBox.Text = FoldoutName;
         CheckBox.Connect("toggled", this, nameof(OnCollapsedToggled));
+
+        OnCollapsedToggled(IsCollapsed);
     }
 
     private void OnCollapsedToggled(bool toggled)
