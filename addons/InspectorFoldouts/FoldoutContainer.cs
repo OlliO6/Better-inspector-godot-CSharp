@@ -5,15 +5,17 @@ using System;
 using Godot;
 
 [Tool]
-public class FoldoutContainer : Control
+public class FoldoutContainer : VBoxContainer
 {
     public event Action<bool> Toggled;
 
     private string foldoutName;
 
-    [Export] private NodePath checkBoxPath;
+    [Export, TypedPath(typeof(CheckBox))] private NodePath checkBoxPath;
+    [Export, TypedPath(typeof(Container))] private NodePath contentPath;
 
     private CheckBox _checkBox;
+    private Container _contentContainer;
 
     public bool IsCollapsed
     {
@@ -22,6 +24,7 @@ public class FoldoutContainer : Control
     }
 
     public CheckBox CheckBox => _checkBox ??= GetNode<CheckBox>(checkBoxPath);
+    public Container ContentContainer => _contentContainer ??= GetNode<Container>(contentPath);
 
     public string FoldoutName
     {
@@ -39,7 +42,17 @@ public class FoldoutContainer : Control
         CheckBox.Connect("toggled", this, nameof(OnCollapsedToggled));
     }
 
-    private void OnCollapsedToggled(bool toggled) => Toggled(toggled);
+    private void OnCollapsedToggled(bool toggled)
+    {
+        Toggled(toggled);
+        ContentContainer.Visible = !toggled;
+    }
+
+    public void AddContent(Control content)
+    {
+        content.GetParent()?.RemoveChild(content);
+        ContentContainer.AddChild(content);
+    }
 }
 
 #endif

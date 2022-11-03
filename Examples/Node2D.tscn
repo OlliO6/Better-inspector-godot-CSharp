@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
 [ext_resource path="res://Examples/new scene.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Examples/ExampleResource.tres" type="Resource" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -14,6 +15,7 @@ border_width_bottom = 27
 modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
 anim = NodePath("ConfirmationDialog/Tree")
+res = ExtResource( 3 )
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )

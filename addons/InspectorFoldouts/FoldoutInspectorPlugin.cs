@@ -58,11 +58,9 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         // Hide when foldout is collapsed
         if (foldout != null)
         {
-            if (foldout.isCollapsed)
-                return true;
-
-            AddCustomControl(new IndentionBuilder());
+            AddCustomControl(new FoldoutContentAdder(foldout.container));
         }
+
         return false;
 
         string CheckForFoldout(string propName, out bool isExpressionProperty)
@@ -103,7 +101,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
     {
         sender.isCollapsed = toggled;
         // Redraw inspector for the object where the foldout was toggled
-        sender.forObj.PropertyListChangedNotify();
+        // sender.forObj.PropertyListChangedNotify();
     }
 }
 
