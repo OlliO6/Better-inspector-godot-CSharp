@@ -16,3 +16,14 @@ public sealed class StartFoldoutAttribute : Attribute
 
 [AttributeUsage(AttributeTargets.Field), Conditional("TOOLS")]
 public sealed class EndFoldoutAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property), Conditional("TOOLS")]
+public sealed class InFoldoutAttribute : Attribute
+{
+    public readonly string foldoutName;
+
+    public InFoldoutAttribute(string foldoutName)
+    {
+        this.foldoutName = foldoutName;
+    }
+}

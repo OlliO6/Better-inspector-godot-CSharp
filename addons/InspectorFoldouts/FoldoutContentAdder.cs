@@ -60,8 +60,6 @@ public class FoldoutContentAdder : Control
 
         button.EmitSignal("pressed");
         button.Pressed = false;
-
-        GD.Print(button);
     }
 }
 

@@ -38,8 +38,16 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
     {
         string propName = path.GetFile();
         Foldout foldout = null;
-        string foldoutName = CheckForFoldout(propName, out bool isExpressionProperty);
-        prevFoldoutNameFor[@object] = foldoutName;
+
+        string foldoutName = CheckForFoldout(
+            propName,
+            @object.GetInEditorTypeCached(),
+            out bool isExpressionProperty,
+            out bool dontSetPrevFoldout,
+            out bool isLastEntry);
+
+        if (!dontSetPrevFoldout)
+            prevFoldoutNameFor[@object] = isLastEntry ? "" : foldoutName;
 
         // Hide if the property is one starting with "_StartF_" or "_EndF_"
         if (isExpressionProperty)
@@ -59,8 +67,12 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
         return false;
 
-        string CheckForFoldout(string propName, out bool isExpressionProperty)
+        string CheckForFoldout(string propName, Type objType, out bool isExpressionProperty, out bool dontSetPrevFoldout, out bool isLastEntry)
         {
+            isExpressionProperty = false;
+            dontSetPrevFoldout = false;
+            isLastEntry = false;
+
             if (propName.StartsWith("_StartF_"))
             {
                 isExpressionProperty = true;
@@ -73,7 +85,42 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 return "";
             }
 
-            isExpressionProperty = false;
+            FieldInfo field = objType.GetField(propName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (field != null)
+            {
+                var inFouldout = field.GetCustomAttribute<InFoldoutAttribute>();
+                if (inFouldout != null)
+                {
+                    dontSetPrevFoldout = true;
+                    return inFouldout.foldoutName;
+                }
+
+                var fouldoutStart = field.GetCustomAttribute<StartFoldoutAttribute>();
+                if (fouldoutStart != null)
+                    return fouldoutStart.foldoutName;
+
+                var foldoutEnd = field.GetCustomAttribute<EndFoldoutAttribute>();
+                if (foldoutEnd != null)
+                {
+                    isLastEntry = true;
+                    return prevFoldoutNameFor[@object];
+                }
+            }
+
+            PropertyInfo prop = objType.GetProperty(propName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (prop != null)
+            {
+                var inFouldout = prop.GetCustomAttribute<InFoldoutAttribute>();
+
+                if (inFouldout != null)
+                {
+                    dontSetPrevFoldout = true;
+                    return inFouldout.foldoutName;
+                }
+            }
+
             return prevFoldoutNameFor[@object];
         }
 
