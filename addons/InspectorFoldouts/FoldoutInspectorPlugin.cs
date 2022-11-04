@@ -3,11 +3,11 @@ namespace BetterInspector.InspectorFoldout;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Godot;
 // using Godot.Collections;
 
-[Tool]
 public class FoldoutInspectorPlugin : EditorInspectorPlugin
 {
     private Dictionary<Godot.Object, string> prevFoldoutNameFor = new();
@@ -56,7 +56,6 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         {
             AddCustomControl(new FoldoutContentAdder(foldout.container));
         }
-        GD.Print(path);
 
         return false;
 

@@ -189,7 +189,7 @@ public class SelectDialog : ConfirmationDialog
 
             void ProcessNode(TreeItem treeItem, Node node, bool currentUnowned)
             {
-                Type nodeType = node.GetInEditorType();
+                Type nodeType = node.GetInEditorTypeCached();
                 bool tyeAssignable = type.IsAssignableFrom(nodeType);
 
                 treeItem.Collapsed = true;

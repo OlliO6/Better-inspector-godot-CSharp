@@ -8,20 +8,13 @@ using Godot;
 [Tool]
 public class InspectorPlugin : EditorInspectorPlugin
 {
-    private Type cachedType = null;
-
     public override bool CanHandle(Godot.Object @object) => true;
-
-    public override void ParseBegin(Godot.Object @object)
-    {
-        cachedType = @object.GetInEditorType();
-    }
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
         string propName = path.GetFile();
 
-        FieldInfo field = cachedType?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        FieldInfo field = @object.GetInEditorTypeCached()?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (field == null || field.FieldType != typeof(NodePath)) return false;
 

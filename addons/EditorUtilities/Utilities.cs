@@ -8,6 +8,27 @@ using Godot;
 
 public static class Utilities
 {
+    public static Dictionary<Godot.Object, Type> objectTypeCache = new();
+
+    public static Type GetInEditorTypeCached(this Godot.Object obj)
+    {
+        if (objectTypeCache.ContainsKey(obj))
+            return objectTypeCache[obj];
+
+        // So the dictionary doesn't gets to large when for example switching scenes
+        if (obj is Node node)
+        {
+            node.Connect(
+                "tree_exited",
+                new ConnectionHelper { OnFired = () => objectTypeCache.Remove(obj) },
+                "Fire");
+        }
+
+        Type type = obj.GetInEditorType();
+        objectTypeCache.Add(obj, type);
+        return type;
+    }
+
     public static Type GetInEditorType(this Godot.Object obj)
     {
         Type type = obj.GetType();
@@ -98,5 +119,17 @@ public static class Utilities
             return dict[key];
 
         return @default;
+    }
+
+    [Tool]
+    private class ConnectionHelper : Godot.Object
+    {
+        public Action OnFired;
+
+        public void Fire()
+        {
+            OnFired?.Invoke();
+            CallDeferred("free");
+        }
     }
 }

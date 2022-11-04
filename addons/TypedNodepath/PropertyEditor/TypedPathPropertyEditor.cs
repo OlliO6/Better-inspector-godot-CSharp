@@ -91,7 +91,7 @@ public class TypedPathPropertyEditor : EditorProperty
         {
             Node pointsTo = editedNode.GetNodeOrNull(property);
 
-            if (!type.IsAssignableFrom(pointsTo?.GetInEditorType()))
+            if (!type.IsAssignableFrom(pointsTo?.GetInEditorTypeCached()))
             {
                 isUpdating = false;
                 Value = null;
