@@ -9,7 +9,7 @@ public class Testing : Node2D
     [Export] private float value;
     [Export] private float value2;
 
-    [Export, TypedPath(typeof(IDamageable)), StartFoldout("Reference")]
+    [Export, TypedPath(typeof(IDamageable)), StartFoldout("References")]
     private NodePath damagae;
     [Export, TypedPath(typeof(Tree))] private NodePath anim;
     [Export] private ExampleResource res;
