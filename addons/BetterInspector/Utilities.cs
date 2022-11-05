@@ -1,14 +1,16 @@
 namespace BetterInspector.Utilities;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BetterInspector.Editor;
 using Godot;
 
 public static class Utilities
 {
+    private const int MaxTypeCacheCount = 50;
+
     public static Dictionary<Godot.Object, Type> objectTypeCache = new();
 
     public static Type GetInEditorTypeCached(this Godot.Object obj)
@@ -26,6 +28,11 @@ public static class Utilities
 
         Type type = obj.GetInEditorType();
         objectTypeCache.Add(obj, type);
+
+        // make sure that the ram won't get blown up
+        if (objectTypeCache.Count > MaxTypeCacheCount)
+            objectTypeCache.Remove(objectTypeCache.First().Key);
+
         return type;
     }
 

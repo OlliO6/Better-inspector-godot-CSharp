@@ -42,7 +42,6 @@ public class Plugin : EditorPlugin
     public override void _Process(float delta)
     {
         GD.Print(Utilities.objectTypeCache.Count);
-        System.Threading.Thread.Sleep(200);
         if (!HasInstance)
         {
             Instance = this;
@@ -76,7 +75,7 @@ public class Plugin : EditorPlugin
         }
     }
 
-    public void RemoveFromTypeCache(Godot.Object obj) { GD.Print("RMV"); Utilities.objectTypeCache.Remove(obj); }
+    public void RemoveFromTypeCache(Godot.Object obj) => Utilities.objectTypeCache.Remove(obj);
 }
 
 #endif
