@@ -6,8 +6,8 @@ using Godot.Collections;
 public class Testing : Node2D
 {
     event Action Event;
-    [Export, InFoldout("LOLS")] private float value;
     [Export] private float value2;
+    [Export, InFoldout("LOLS")] private float value;
 
     [Export, TypedPath(typeof(IDamageable)), StartFoldout("References", position = FoldoutPosition.Bottom)]
     private NodePath damagae;

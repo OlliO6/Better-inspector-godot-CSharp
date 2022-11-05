@@ -9,6 +9,7 @@ public class Foldout : Godot.Object
 {
     static readonly PackedScene containerScene = GD.Load<PackedScene>("addons/BetterInspector/Foldouts/Foldout.tscn");
 
+    public FoldoutPosition position;
     public FoldoutContainer container;
     public bool isCollapsed;
     public readonly string name;
@@ -18,12 +19,13 @@ public class Foldout : Godot.Object
 
     private Foldout() { }
 
-    public Foldout(FoldoutInspectorPlugin fouldoutInspector, Godot.Object forObj, bool isCollapsed, string name)
+    public Foldout(FoldoutInspectorPlugin fouldoutInspector, Godot.Object forObj, bool isCollapsed, string name, FoldoutPosition position)
     {
         this.fouldoutInspector = fouldoutInspector;
         this.isCollapsed = isCollapsed;
         this.name = name;
         this.forObj = forObj;
+        this.position = position;
     }
 
     // Should only be called during parse ParseProperty

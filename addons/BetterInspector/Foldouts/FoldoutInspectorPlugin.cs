@@ -3,6 +3,7 @@ namespace BetterInspector.Editor;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BetterInspector.Utilities;
 using Godot;
@@ -29,7 +30,8 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
             currentFoldoutsFor[@object].Add(item, new Foldout(
                 this, @object,
                 prevFoldouts[item].isCollapsed,
-                prevFoldouts[item].name));
+                prevFoldouts[item].name,
+                prevFoldouts[item].position));
         }
     }
 
@@ -41,6 +43,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         string foldoutName = CheckForFoldout(
             propName,
             @object.GetInEditorTypeCached(),
+            out FoldoutPosition position,
             out bool isExpressionProperty,
             out bool dontSetPrevFoldout,
             out bool isLastEntry);
@@ -48,34 +51,45 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
         if (!dontSetPrevFoldout)
             prevFoldoutNameFor[@object] = isLastEntry ? "" : foldoutName;
 
-        // Hide if the property is one starting with "_StartF_" or "_EndF_"
-        if (isExpressionProperty)
-            return true;
-
         if (foldoutName != "")
         {
-            CreateFoldoutIfNeeded(foldoutName);
+            CreateFoldoutIfNeeded(foldoutName, position);
             foldout = currentFoldoutsFor[@object][foldoutName];
             foldout.properties.Add(path);
         }
 
+        // Hide if the property is one starting with "_StartF_" or "_EndF_"
+        if (isExpressionProperty)
+            return true;
+
         if (foldout != null)
-        {
             AddCustomControl(new FoldoutContentAdder(foldout.container));
-        }
 
         return false;
 
-        string CheckForFoldout(string propName, Type objType, out bool isExpressionProperty, out bool dontSetPrevFoldout, out bool isLastEntry)
+        string CheckForFoldout(string propName, Type objType, out FoldoutPosition position, out bool isExpressionProperty, out bool dontSetPrevFoldout, out bool isLastEntry)
         {
             isExpressionProperty = false;
             dontSetPrevFoldout = false;
             isLastEntry = false;
+            position = FoldoutPosition.Dynamic;
 
             if (propName.StartsWith("_StartF_"))
             {
                 isExpressionProperty = true;
-                return propName.LStrip("_StartF_").Capitalize();
+
+                string strippedName = propName.LStrip("_StartF_");
+
+                position = strippedName.StartsWith("AtBottom_")
+                    ? FoldoutPosition.Bottom
+                    : (strippedName.StartsWith("AtTop_")
+                        ? FoldoutPosition.Top
+                        : FoldoutPosition.Dynamic);
+
+                return strippedName
+                        .LStrip("AtBottom_")
+                        .LStrip("AtTop_")
+                        .Capitalize();
             }
 
             if (propName.StartsWith("_EndF_"))
@@ -91,13 +105,17 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 var inFouldout = field.GetCustomAttribute<InFoldoutAttribute>();
                 if (inFouldout != null)
                 {
+                    position = inFouldout.position;
                     dontSetPrevFoldout = true;
                     return inFouldout.foldoutName;
                 }
 
                 var fouldoutStart = field.GetCustomAttribute<StartFoldoutAttribute>();
                 if (fouldoutStart != null)
+                {
+                    position = fouldoutStart.position;
                     return fouldoutStart.foldoutName;
+                }
 
                 var foldoutEnd = field.GetCustomAttribute<EndFoldoutAttribute>();
                 if (foldoutEnd != null)
@@ -115,6 +133,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
                 if (inFouldout != null)
                 {
+                    position = inFouldout.position;
                     dontSetPrevFoldout = true;
                     return inFouldout.foldoutName;
                 }
@@ -123,11 +142,11 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
             return prevFoldoutNameFor[@object];
         }
 
-        void CreateFoldoutIfNeeded(string foldoutName)
+        void CreateFoldoutIfNeeded(string foldoutName, FoldoutPosition position)
         {
             if (!currentFoldoutsFor[@object].ContainsKey(foldoutName))
             {
-                currentFoldoutsFor[@object].Add(foldoutName, new Foldout(this, @object, true, foldoutName));
+                currentFoldoutsFor[@object].Add(foldoutName, new Foldout(this, @object, true, foldoutName, position));
                 currentFoldoutsFor[@object][foldoutName].Construct();
                 return;
             }
@@ -137,6 +156,29 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 currentFoldoutsFor[@object][foldoutName].Construct();
             }
         }
+    }
+
+    public override void ParseEnd()
+    {
+        Godot.Object @object = currentFoldoutsFor.Last().Key;
+
+        // Move the foldout containers if there position is specified
+        foreach (Foldout foldout in currentFoldoutsFor[@object].Values)
+        {
+            switch (foldout.position)
+            {
+                case FoldoutPosition.Top:
+                    foldout.container.GetParent().MoveChild(foldout.container, 0);
+                    break;
+
+                case FoldoutPosition.Bottom:
+                    foldout.container.Raise();
+                    break;
+            }
+        }
+
+        currentFoldoutsFor.Remove(@object);
+        prevFoldoutNameFor.Remove(@object);
     }
 
     public void OnFoldoutToggled(Foldout sender, bool toggled)
