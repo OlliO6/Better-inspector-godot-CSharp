@@ -13,6 +13,8 @@ public class Testing : Node2D
     private NodePath damagae;
     [Export, TypedPath(typeof(AnimationPlayer))] private NodePath anim;
     [Export, TypedPath(typeof(Area2D))] private NodePath playerRange;
+    [Export, TypedPath(typeof(Node))] private NodePath node;
+    [Export, TypedPath(typeof(Node))] private NodePath node2;
     [Export] private ExampleResource res;
     [Export] private PackedScene number;
     [Export] private PackedScene number2;

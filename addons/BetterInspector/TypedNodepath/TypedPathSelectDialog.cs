@@ -3,6 +3,7 @@ namespace BetterInspector.Editor;
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using BetterInspector.Utilities;
 using Godot;
@@ -242,8 +243,7 @@ public class TypedPathSelectDialog : ConfirmationDialog
 
         static NodePath GetPathTo(TreeItem item)
         {
-            string path = string.Empty;
-
+            StringBuilder path = new();
             TreeItem current = item;
 
             while (current.GetParent() != null)
@@ -252,7 +252,8 @@ public class TypedPathSelectDialog : ConfirmationDialog
                 current = current.GetParent();
             }
 
-            return path;
+            path = path.Insert(0, "./");
+            return path.ToString();
         }
     }
 
