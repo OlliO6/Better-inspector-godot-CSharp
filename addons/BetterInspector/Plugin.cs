@@ -2,6 +2,7 @@
 namespace BetterInspector.Editor;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 using Utilities;
 
@@ -18,10 +19,7 @@ public class Plugin : EditorPlugin
     {
         Instance = this;
 
-        AddInspectorPlugin(typedPathInspectorPlugin = new());
-        AddInspectorPlugin(foldoutInspectorPlugin = new());
-
-        OnBuild();
+        Reset();
     }
 
     public override void _ExitTree()
@@ -41,24 +39,27 @@ public class Plugin : EditorPlugin
 
     public override void _Process(float delta)
     {
-        GD.Print(Utilities.objectTypeCache.Count);
         if (!HasInstance)
         {
             Instance = this;
-            OnBuild();
+
+            Reset();
         }
     }
 
-    private void OnBuild()
+    private async void Reset()
     {
+        await ToSignal(GetTree(), "idle_frame");
+
+
+        // Reset inspector plugins (order matters(last will parse property first))
+        RestartInspectorPlugin(ref typedPathInspectorPlugin);
+
+        // Foldout inspector plugin needs to be added at last of all
+        await ToSignal(GetTree(), "idle_frame");
+        RestartInspectorPlugin(ref foldoutInspectorPlugin);
+
         Reselect();
-
-        // Reset inspector plugins
-        RemoveInspectorPlugin(foldoutInspectorPlugin);
-        AddInspectorPlugin(foldoutInspectorPlugin = new());
-
-        RemoveInspectorPlugin(typedPathInspectorPlugin);
-        AddInspectorPlugin(typedPathInspectorPlugin = new());
 
         void Reselect()
         {
@@ -73,6 +74,16 @@ public class Plugin : EditorPlugin
                 GetEditorInterface().GetSelection().AddNode(node);
             }
         }
+    }
+
+    private void RestartInspectorPlugin<T>(ref T inspectorPlugin)
+        where T : EditorInspectorPlugin, new()
+    {
+        if (IsInstanceValid(inspectorPlugin))
+            RemoveInspectorPlugin(inspectorPlugin);
+
+        inspectorPlugin = new();
+        AddInspectorPlugin(inspectorPlugin);
     }
 
     public void RemoveFromTypeCache(Godot.Object obj) => Utilities.objectTypeCache.Remove(obj);
