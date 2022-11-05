@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using BetterInspector.Editor;
 using Godot;
 
 public static class Utilities
@@ -16,12 +17,11 @@ public static class Utilities
             return objectTypeCache[obj];
 
         // So the dictionary doesn't gets to large when for example switching scenes
-        if (obj is Node node)
+        if (obj is Node node &&
+            !node.IsConnected("tree_exited", Plugin.Instance, nameof(Plugin.RemoveFromTypeCache)) &&
+            Plugin.HasInstance)
         {
-            node.Connect(
-                "tree_exited",
-                new ConnectionHelper { OnFired = () => objectTypeCache.Remove(obj) },
-                "Fire");
+            node.Connect("tree_exited", Plugin.Instance, nameof(Plugin.RemoveFromTypeCache), new(obj), (uint)Godot.Object.ConnectFlags.Oneshot);
         }
 
         Type type = obj.GetInEditorType();
@@ -121,15 +121,4 @@ public static class Utilities
         return @default;
     }
 
-    [Tool]
-    private class ConnectionHelper : Godot.Object
-    {
-        public Action OnFired;
-
-        public void Fire()
-        {
-            OnFired?.Invoke();
-            CallDeferred("free");
-        }
-    }
 }

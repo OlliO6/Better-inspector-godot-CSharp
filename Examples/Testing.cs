@@ -11,7 +11,8 @@ public class Testing : Node2D
 
     [Export, TypedPath(typeof(IDamageable)), StartFoldout("References")]
     private NodePath damagae;
-    [Export, TypedPath(typeof(Tree))] private NodePath anim;
+    [Export, TypedPath(typeof(AnimationPlayer))] private NodePath anim;
+    [Export, TypedPath(typeof(Area2D))] private NodePath playerRange;
     [Export] private ExampleResource res;
     [Export] private PackedScene number;
     [Export] private PackedScene number2;

@@ -3,6 +3,7 @@ namespace BetterInspector.Editor;
 
 using System;
 using Godot;
+using Utilities;
 
 [Tool]
 public class Plugin : EditorPlugin
@@ -40,6 +41,8 @@ public class Plugin : EditorPlugin
 
     public override void _Process(float delta)
     {
+        GD.Print(Utilities.objectTypeCache.Count);
+        System.Threading.Thread.Sleep(200);
         if (!HasInstance)
         {
             Instance = this;
@@ -51,10 +54,12 @@ public class Plugin : EditorPlugin
     {
         Reselect();
 
-        // Reset inspector plugin
+        // Reset inspector plugins
         RemoveInspectorPlugin(foldoutInspectorPlugin);
-        foldoutInspectorPlugin = new();
-        AddInspectorPlugin(foldoutInspectorPlugin);
+        AddInspectorPlugin(foldoutInspectorPlugin = new());
+
+        RemoveInspectorPlugin(typedPathInspectorPlugin);
+        AddInspectorPlugin(typedPathInspectorPlugin = new());
 
         void Reselect()
         {
@@ -70,6 +75,8 @@ public class Plugin : EditorPlugin
             }
         }
     }
+
+    public void RemoveFromTypeCache(Godot.Object obj) { GD.Print("RMV"); Utilities.objectTypeCache.Remove(obj); }
 }
 
 #endif

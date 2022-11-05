@@ -6,7 +6,7 @@ using System.Reflection;
 using BetterInspector.Utilities;
 using Godot;
 
-[Tool]
+// [Tool]
 public class TypedPathsInspectorPlugin : EditorInspectorPlugin
 {
     public override bool CanHandle(Godot.Object @object) => true;

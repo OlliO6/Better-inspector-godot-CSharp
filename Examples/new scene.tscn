@@ -8,6 +8,7 @@
 script = ExtResource( 0 )
 damagae = NodePath("Control2")
 anim = NodePath("Tree")
+playerRange = NodePath("Area2D")
 res = ExtResource( 2 )
 
 [node name="Control2" type="Control" parent="."]
@@ -36,3 +37,5 @@ anim = NodePath("")
 [node name="Tree" type="Tree" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+
+[node name="Area2D" type="Area2D" parent="."]
