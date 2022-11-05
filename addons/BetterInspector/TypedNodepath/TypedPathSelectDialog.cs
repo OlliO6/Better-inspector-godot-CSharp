@@ -1,12 +1,13 @@
 #if TOOLS
-namespace BetterInspector.TypedNodePaths;
+namespace BetterInspector.Editor;
 
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using BetterInspector.Utilities;
 using Godot;
 
-public class SelectDialog : ConfirmationDialog
+public class TypedPathSelectDialog : ConfirmationDialog
 {
     private bool assigning, onlyShowOwnNodes = true;
     private readonly Type type;
@@ -14,7 +15,7 @@ public class SelectDialog : ConfirmationDialog
     private LineEdit filterText;
     private CheckButton showUnownedToggle;
 
-    public SelectDialog(Type type)
+    public TypedPathSelectDialog(Type type)
     {
         this.type = type;
         WindowTitle = "Select a " + type.FullName;

@@ -1,12 +1,11 @@
 #if TOOLS
-namespace BetterInspector.InspectorFoldout;
+namespace BetterInspector.Editor;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using BetterInspector.Utilities;
 using Godot;
-// using Godot.Collections;
 
 public class FoldoutInspectorPlugin : EditorInspectorPlugin
 {

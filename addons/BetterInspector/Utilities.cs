@@ -1,4 +1,4 @@
-namespace BetterInspector;
+namespace BetterInspector.Utilities;
 
 using System;
 using System.Collections;

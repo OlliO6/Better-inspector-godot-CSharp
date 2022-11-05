@@ -1,5 +1,5 @@
 #if TOOLS
-namespace BetterInspector.InspectorFoldout;
+namespace BetterInspector.Editor;
 
 using System.Collections.Generic;
 using Godot;
@@ -7,7 +7,7 @@ using Godot;
 [Tool]
 public class Foldout : Godot.Object
 {
-    static readonly PackedScene containerScene = GD.Load<PackedScene>("res://addons/InspectorFoldouts/Foldout.tscn");
+    static readonly PackedScene containerScene = GD.Load<PackedScene>("addons/BetterInspector/Foldouts/Foldout.tscn");
 
     public FoldoutContainer container;
     public bool isCollapsed;

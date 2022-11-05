@@ -1,8 +1,9 @@
 #if TOOLS
-namespace BetterInspector.TypedNodePaths;
+namespace BetterInspector.Editor;
 
 using System;
 using System.Threading.Tasks;
+using BetterInspector.Utilities;
 using Godot;
 
 [Tool]
@@ -15,7 +16,7 @@ public class TypedPathPropertyEditor : EditorProperty
     private bool isUpdating;
 
     private NodePath value;
-    private SelectDialog selectDialog;
+    private TypedPathSelectDialog selectDialog;
 
     public NodePath Value
     {
@@ -68,7 +69,7 @@ public class TypedPathPropertyEditor : EditorProperty
                         Flat = true
                     })
                 ),
-                selectDialog = new SelectDialog(type)
+                selectDialog = new TypedPathSelectDialog(type)
             )
         );
 

@@ -1,5 +1,5 @@
 #if TOOLS
-namespace BetterInspector;
+namespace BetterInspector.Editor;
 
 using System;
 using Godot;
@@ -10,15 +10,32 @@ public class Plugin : EditorPlugin
     public static Plugin Instance { get; private set; }
     public static bool HasInstance => IsInstanceValid(Instance);
 
+    private FoldoutInspectorPlugin foldoutInspectorPlugin;
+    private TypedPathsInspectorPlugin typedPathInspectorPlugin;
 
     public override void _EnterTree()
     {
+        Instance = this;
 
+        AddInspectorPlugin(typedPathInspectorPlugin = new());
+        AddInspectorPlugin(foldoutInspectorPlugin = new());
+
+        OnBuild();
     }
 
     public override void _ExitTree()
     {
+        Instance = null;
 
+        RemoveInspectorPlugin(typedPathInspectorPlugin);
+        RemoveInspectorPlugin(foldoutInspectorPlugin);
+    }
+
+    public static Texture GetIcon(string name)
+    {
+        if (!HasInstance) return null;
+
+        return Instance.GetEditorInterface().GetBaseControl().Theme.GetIcon(name, "EditorIcons");
     }
 
     public override void _Process(float delta)
@@ -33,6 +50,11 @@ public class Plugin : EditorPlugin
     private void OnBuild()
     {
         Reselect();
+
+        // Reset inspector plugin
+        RemoveInspectorPlugin(foldoutInspectorPlugin);
+        foldoutInspectorPlugin = new();
+        AddInspectorPlugin(foldoutInspectorPlugin);
 
         void Reselect()
         {

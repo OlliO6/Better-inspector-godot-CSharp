@@ -1,12 +1,13 @@
 #if TOOLS
-namespace BetterInspector.TypedNodePaths;
+namespace BetterInspector.Editor;
 
 using System;
 using System.Reflection;
+using BetterInspector.Utilities;
 using Godot;
 
 [Tool]
-public class InspectorPlugin : EditorInspectorPlugin
+public class TypedPathsInspectorPlugin : EditorInspectorPlugin
 {
     public override bool CanHandle(Godot.Object @object) => true;
 

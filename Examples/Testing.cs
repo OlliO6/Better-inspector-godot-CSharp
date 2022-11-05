@@ -6,7 +6,7 @@ using Godot.Collections;
 public class Testing : Node2D
 {
     event Action Event;
-    [Export] private float value;
+    [Export, InFoldout("LOLS")] private float value;
     [Export] private float value2;
 
     [Export, TypedPath(typeof(IDamageable)), StartFoldout("References")]

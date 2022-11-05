@@ -1,5 +1,5 @@
 #if TOOLS
-namespace BetterInspector.InspectorFoldout;
+namespace BetterInspector.Editor;
 
 using System;
 using Godot;

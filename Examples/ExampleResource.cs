@@ -7,6 +7,7 @@ public class ExampleResource : Resource
 
     [Export] private bool _StartF_PropertyPaths;
     [Export] private string speedPath;
+    [Export, BetterInspector.TypedPath(typeof(Node))] private NodePath wwww;
     [Export] private string jumpPath;
     [Export] private bool _EndF_;
 
