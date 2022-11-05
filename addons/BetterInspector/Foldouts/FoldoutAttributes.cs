@@ -7,6 +7,7 @@ using System.Diagnostics;
 public sealed class StartFoldoutAttribute : Attribute
 {
     public readonly string foldoutName;
+    public FoldoutPosition position;
 
     public StartFoldoutAttribute(string foldoutName)
     {
@@ -21,9 +22,17 @@ public sealed class EndFoldoutAttribute : Attribute { }
 public sealed class InFoldoutAttribute : Attribute
 {
     public readonly string foldoutName;
+    public FoldoutPosition position;
 
     public InFoldoutAttribute(string foldoutName)
     {
         this.foldoutName = foldoutName;
     }
+}
+
+public enum FoldoutPosition
+{
+    Dynamic,
+    Top,
+    Bottom
 }

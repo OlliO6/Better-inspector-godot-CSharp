@@ -9,7 +9,7 @@ public class Testing : Node2D
     [Export, InFoldout("LOLS")] private float value;
     [Export] private float value2;
 
-    [Export, TypedPath(typeof(IDamageable)), StartFoldout("References")]
+    [Export, TypedPath(typeof(IDamageable)), StartFoldout("References", position = FoldoutPosition.Bottom)]
     private NodePath damagae;
     [Export, TypedPath(typeof(AnimationPlayer))] private NodePath anim;
     [Export, TypedPath(typeof(Area2D))] private NodePath playerRange;
