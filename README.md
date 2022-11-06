@@ -77,7 +77,7 @@ Foldouts
 
 In Godot there's no easy or good way to put a field into a foldout in the inspector.
 
-With this addon you there are some attributes exactly for that.
+With this addon there are some attributes exactly for that.
 
 You can use the `[StartFoldout(string name)]` in combination with the `[EndFoldout]` attribute to define that a range of exported properties is in an foldout.
 
