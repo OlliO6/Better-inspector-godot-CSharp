@@ -13,10 +13,8 @@ private NodePath animPath;
 ```
 You can even use unusual types like interfaces.
 
-That will look like this in the inspector.
-![](https://github.com/OlliO6/Better-inspector-godot-CSharp/blob/master/Screenshots/PathSelect.mp4)
-
-------------------
+An extra feature of this is the select button. Click on it and the node where the path is pointing to will get selected.
+![](Screenshots/PathSelect.gif)
 
 Quick node refernces
 ---------------------------
