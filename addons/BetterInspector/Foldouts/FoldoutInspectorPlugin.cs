@@ -18,21 +18,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
     public override void ParseBegin(Godot.Object @object)
     {
         prevFoldoutNameFor.AddOrSet(@object, "");
-
-        Dictionary<string, Foldout> prevFoldouts = currentFoldoutsFor.GetOrDefault(@object, null);
-
         currentFoldoutsFor.AddOrSet(@object, new());
-
-        if (prevFoldouts == null) return;
-
-        foreach (string item in prevFoldouts.Keys)
-        {
-            currentFoldoutsFor[@object].Add(item, new Foldout(
-                this, @object,
-                prevFoldouts[item].isCollapsed,
-                prevFoldouts[item].name,
-                prevFoldouts[item].position));
-        }
     }
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
