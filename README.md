@@ -2,6 +2,21 @@ Better inspector godot
 =================
 > These plugins are mainly for c#
 
+Setup
+------------
+Just copy the addons folder in your Godot mono project.
+
+Copy this your `ProjectName.csproj` file.
+```xml
+<ItemGroup>
+    <ProjectReference Include="addons/BetterInspector/Quick References/ReferencesGenerator/ReferencesGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <Compile Remove="addons/BetterInspector/Quick References/ReferencesGenerator/**" />
+</ItemGroup>
+```
+And set the `TargetFramework` to dotnetstandart2.1 or 2.0
+```xml
+<TargetFramework>netstandard2.1</TargetFramework>
+```
 
 Typed node paths
 ------------------------------
