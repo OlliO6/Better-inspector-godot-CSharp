@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypedExports", "TypedExports.csproj", "{76D2AF8A-5727-416E-BBC1-F41EAC4DA777}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterInspector", "BetterInspector.csproj", "{76D2AF8A-5727-416E-BBC1-F41EAC4DA777}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
