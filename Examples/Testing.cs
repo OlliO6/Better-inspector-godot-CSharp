@@ -1,19 +1,18 @@
-namespace WWWWOfdsA;
 using System;
 using BetterInspector;
 using Godot;
+using Health;
 
 public partial class Testing : Node2D
 {
     event Action Events;
-    [NodeRef(foldout = "Unrequired")] public IDamageable damageableObj;
+    [NodeRef(foldout = "")] public IDamageable damageableObj;
     [NodeRef(foldout = "")] public AnimationPlayer animationPlayer;
-    [Export] private NodePath anpath;
     [Export] private float value2;
-    [Export, InFoldout("LOLS")] private float value;
+    [Export, InFoldout("")] private float value;
 
-    [Export, TypedPath(typeof(IDamageable)), StartFoldout("References", position = FoldoutPosition.Bottom)]
-    private NodePath damagae;
+    [Export, TypedPath(typeof(IDamageable)), StartFoldout("", position = FoldoutPosition.Bottom)]
+    private NodePath damageManager;
     [Export, TypedPath(typeof(AnimationPlayer))] private NodePath anim;
     [Export, TypedPath(typeof(Area2D))] private NodePath playerRange;
     [Export, TypedPath(typeof(Node))] private NodePath node;
@@ -27,6 +26,3 @@ public partial class Testing : Node2D
     [Export] private float value3;
     [Export] private float value4;
 }
-
-
-public interface IDamageable { }

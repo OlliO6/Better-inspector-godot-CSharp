@@ -1,8 +1,7 @@
 using System;
 using Godot;
-using WWWWOfdsA;
 
-public class DamageableArea : Area2D, IDamageable
+public class DamageableArea : Area2D, Health.IDamageable
 {
     // Declare member variables here. Examples:
     // private int a = 2;

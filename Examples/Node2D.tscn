@@ -64,14 +64,14 @@ _bundled = {
 [node name="Node2D" type="Node2D"]
 modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
-anpath = NodePath("ConfirmationDialog")
 value2 = 0.065
 anim = NodePath("AnimationPlay2")
 playerRange = NodePath("Control/Control/Area2D")
 res = SubResource( 6 )
 number = SubResource( 3 )
 number2 = SubResource( 4 )
-_animationPlayer = NodePath("ConfirmationDialog/Tree/AnimationPlay")
+_damageableObj = NodePath("Control/Control/DamageableSprite")
+_animationPlayer = NodePath("AnimationPlay2")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )

@@ -9,30 +9,13 @@ using Godot;
 
 public static class Utilities
 {
-    private const int MaxTypeCacheCount = 50;
-
-    public static Dictionary<Godot.Object, Type> objectTypeCache = new();
-
     public static Type GetInEditorTypeCached(this Godot.Object obj)
     {
-        if (objectTypeCache.ContainsKey(obj))
-            return objectTypeCache[obj];
-
-        // So the dictionary doesn't gets to large when for example switching scenes
-        if (obj is Node node &&
-            !node.IsConnected("tree_exited", Plugin.Instance, nameof(Plugin.RemoveFromTypeCache)) &&
-            Plugin.HasInstance)
-        {
-            node.Connect("tree_exited", Plugin.Instance, nameof(Plugin.RemoveFromTypeCache), new(obj), (uint)Godot.Object.ConnectFlags.Oneshot);
-        }
+        if (TypeCache.Cache.ContainsKey(obj))
+            return TypeCache.Cache[obj];
 
         Type type = obj.GetInEditorType();
-        objectTypeCache.Add(obj, type);
-
-        // make sure that the ram won't get blown up
-        if (objectTypeCache.Count > MaxTypeCacheCount)
-            objectTypeCache.Remove(objectTypeCache.First().Key);
-
+        TypeCache.Instance.Add(obj, type);
         return type;
     }
 
@@ -127,5 +110,51 @@ public static class Utilities
 
         return @default;
     }
+}
 
+[Tool]
+public class TypeCache : Godot.Object
+{
+    private const int MaxCacheCount = 50;
+
+    private static Dictionary<Godot.Object, Type> cache = new();
+    private static TypeCache instance;
+
+    public static TypeCache Instance
+    {
+        get
+        {
+            if (!IsInstanceValid(instance))
+                instance = new();
+
+            return instance;
+        }
+    }
+
+    public static Dictionary<Godot.Object, Type> Cache => cache;
+
+    public void Remove(Godot.Object obj)
+    {
+        Cache.Remove(obj);
+
+        if (obj.IsConnected("script_changed", Instance, nameof(Remove)))
+            obj.Disconnect("script_changed", Instance, nameof(Remove));
+
+        if (obj is Node node && node.IsConnected("tree_exited", Instance, nameof(Remove)))
+            node.Disconnect("tree_exited", Instance, nameof(Remove));
+    }
+
+    public void Add(Godot.Object obj, Type type)
+    {
+        Cache.Add(obj, type);
+
+        if (Cache.Count > MaxCacheCount)
+            Cache.Remove(TypeCache.Cache.First().Key);
+
+        if (!obj.IsConnected("script_changed", Instance, nameof(Remove)))
+            obj.Connect("script_changed", Instance, nameof(Remove), new(obj));
+
+        if (obj is Node node && !node.IsConnected("tree_exited", Instance, nameof(Remove)))
+            node.Connect("tree_exited", Instance, nameof(Remove), new(obj));
+    }
 }

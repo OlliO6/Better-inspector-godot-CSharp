@@ -49,6 +49,13 @@ public class Plugin : EditorPlugin
 
     private async void Reset()
     {
+        // Clear type cache
+        GD.Print("clear");
+        foreach (var key in TypeCache.Cache.Keys)
+            TypeCache.Instance.Remove(key);
+
+        TypeCache.Cache.Clear();
+
         await ToSignal(GetTree(), "idle_frame");
 
 
@@ -92,8 +99,6 @@ public class Plugin : EditorPlugin
         inspectorPlugin = new();
         AddInspectorPlugin(inspectorPlugin);
     }
-
-    public void RemoveFromTypeCache(Godot.Object obj) => Utilities.objectTypeCache.Remove(obj);
 }
 
 #endif
