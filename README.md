@@ -1,6 +1,8 @@
 Better inspector godot
 =================
-> These plugins are mainly for c#
+
+This plugin adds extra features and improvements related to the inspector.
+It's mainly for c#.
 
 Setup
 ------------
