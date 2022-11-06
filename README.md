@@ -1,6 +1,8 @@
 Better inspector godot
 =================
-> These plugins are mainly for c#
+
+This plugin adds extra features and improvements related to the inspector.
+It's mainly for c#.
 
 Setup
 ------------
@@ -77,11 +79,11 @@ Foldouts
 
 In Godot there's no easy or good way to put a field into a foldout in the inspector.
 
-With this addon you there are some attributes exactly for that.
+With this addon there are some attributes exactly for that.
 
 You can use the `[StartFoldout(string name)]` in combination with the `[EndFoldout]` attribute to define that a range of exported properties is in an foldout.
 
-There's also the `[InFoldout(string name)]` attribute that puts just the property applied on an foldout.
+There's also the `[InFoldout(string name)]` attribute that puts just the property applied on in a foldout.
 
 
 Example:
