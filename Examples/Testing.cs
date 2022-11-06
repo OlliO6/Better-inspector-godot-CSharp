@@ -1,11 +1,15 @@
+namespace WWWWOfdsA;
 using System;
 using BetterInspector;
 using Godot;
-using Godot.Collections;
 
-public class Testing : Node2D
+public partial class Testing : Node2D
 {
     event Action Event;
+
+    [NodeRef()] public AnimationPlayer animPlay;
+    [NodeRef] public IDamageable damageableObj;
+    [Export] private NodePath anpath;
     [Export] private float value2;
     [Export, InFoldout("LOLS")] private float value;
 

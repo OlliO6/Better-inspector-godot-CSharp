@@ -9,6 +9,8 @@ script = ExtResource( 0 )
 damagae = NodePath("Control2")
 anim = NodePath("Tree")
 playerRange = NodePath("Area2D")
+node = NodePath(".")
+node2 = NodePath(".")
 res = ExtResource( 2 )
 
 [node name="Control2" type="Control" parent="."]
@@ -29,7 +31,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
-ctrl = NodePath("")
+ctrl = NodePath("../Control39")
 ctrl2 = NodePath("../Control39")
 ctrl3 = NodePath("..")
 anim = NodePath("")

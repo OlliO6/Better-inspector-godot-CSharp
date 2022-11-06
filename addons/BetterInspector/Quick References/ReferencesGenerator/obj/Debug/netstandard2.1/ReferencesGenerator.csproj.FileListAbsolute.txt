@@ -1,0 +1,10 @@
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\bin\Debug\netstandard2.1\ReferencesGenerator.deps.json
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\bin\Debug\netstandard2.1\ReferencesGenerator.dll
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\bin\Debug\netstandard2.1\ReferencesGenerator.pdb
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.csproj.AssemblyReference.cache
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.AssemblyInfoInputs.cache
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.AssemblyInfo.cs
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.csproj.CoreCompileInputs.cache
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.dll
+C:\Users\olive\GodotProjects\TypedExports\addons\BetterInspector\Quick References\ReferencesGenerator\obj\Debug\netstandard2.1\ReferencesGenerator.pdb
