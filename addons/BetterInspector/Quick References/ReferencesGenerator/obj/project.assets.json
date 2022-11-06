@@ -1490,11 +1490,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\olive\\GodotProjects\\TypedExports\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\olive\\GodotProjects\\BetterInspector\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
       "projectName": "ReferencesGenerator",
-      "projectPath": "C:\\Users\\olive\\GodotProjects\\TypedExports\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
+      "projectPath": "C:\\Users\\olive\\GodotProjects\\BetterInspector\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
       "packagesPath": "C:\\Users\\olive\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\olive\\GodotProjects\\TypedExports\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\obj\\",
+      "outputPath": "C:\\Users\\olive\\GodotProjects\\BetterInspector\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Users\\olive\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",

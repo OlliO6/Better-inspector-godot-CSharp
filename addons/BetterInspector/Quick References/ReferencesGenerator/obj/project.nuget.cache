@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "If95dWZT40tRhID+GA872p6QUSzqm/KtZVAH2mkDmWqaRhUOyKCorNFh3tYJbCNIbHYpLYS1Qk6+3uoYKOaJVg==",
+  "dgSpecHash": "jQU6ze1psh96TN91NC/X+iTnudZXFIk15MNxfU+XLCsyY7HJt3eDPTQnVrX42AD2SDhHkUMSpG6nEET5UC95lQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\olive\\GodotProjects\\TypedExports\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
+  "projectFilePath": "C:\\Users\\olive\\GodotProjects\\BetterInspector\\addons\\BetterInspector\\Quick References\\ReferencesGenerator\\ReferencesGenerator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\olive\\.nuget\\packages\\humanizer.core\\2.2.0\\humanizer.core.2.2.0.nupkg.sha512",
     "C:\\Users\\olive\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

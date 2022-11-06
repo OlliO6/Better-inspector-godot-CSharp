@@ -5,10 +5,9 @@ using Godot;
 
 public partial class Testing : Node2D
 {
-    event Action Event;
-
-    [NodeRef()] public AnimationPlayer animPlay;
-    [NodeRef] public IDamageable damageableObj;
+    event Action Events;
+    [NodeRef(foldout = "Unrequired")] public IDamageable damageableObj;
+    [NodeRef(foldout = "")] public AnimationPlayer animationPlayer;
     [Export] private NodePath anpath;
     [Export] private float value2;
     [Export, InFoldout("LOLS")] private float value;

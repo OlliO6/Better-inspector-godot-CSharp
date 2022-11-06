@@ -8,15 +8,17 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 [Generator]
 public class NodeRefGenerator : ISourceGenerator
 {
-    private struct Property
+    private record Property
     {
-        public string name;
-        public string type;
+        public readonly string name;
+        public readonly string type;
+        public readonly string foldout;
 
-        public Property(string name, string type)
+        public Property(string name, string type, string foldout)
         {
             this.name = name;
             this.type = type;
+            this.foldout = foldout;
         }
     }
 
@@ -27,24 +29,61 @@ public class NodeRefGenerator : ISourceGenerator
             var root = syntaxTree.GetRoot();
 
             // Get Fields with Require attribute
-            var fieldsWithRequireAttribute = root
+            var fieldsAttribute = root
                     .DescendantNodes()
                     .OfType<FieldDeclarationSyntax>()
-                    .Where(field => field.AttributeLists
-                            .Any(attributes => attributes.Attributes
-                                    .Any(attribute => attribute.Name.ToString() is "NodeRef")));
+                    .Where(field => field.AttributeLists.Count > 0);
+            //.Any(attributes => attributes.Attributes
+            //.Any(attribute => attribute.Name.ToString() is "NodeRef")));
 
             List<Property> properties = new();
 
-            foreach (var field in fieldsWithRequireAttribute)
+            foreach (var field in fieldsAttribute)
+            {
+                AttributeSyntax? attribute = null;
+
+                foreach (AttributeListSyntax attributeList in field.AttributeLists)
+                {
+                    if (attributeList.Attributes.Any(anyAttribute =>
+                    {
+                        if (anyAttribute.Name.ToString() is "NodeRef")
+                        {
+                            attribute = anyAttribute;
+                            return true;
+                        }
+                        return false;
+                    }))
+                        break;
+                }
+
+                if (attribute == null)
+                    continue;
+
+                string type = field.Declaration.Type.ToString();
+                string foldout = "\"References\"";
+
+                // Get specified foldout name
+                if (attribute.ArgumentList != null)
+                    foreach (var argument in attribute.ArgumentList.Arguments)
+                    {
+                        if (argument.NameEquals?.Name.ToString() == "foldout")
+                        {
+                            foldout = argument.Expression.ToString();
+                            break;
+                        }
+                    }
+
                 foreach (var variable in field.Declaration.Variables)
                 {
                     properties.Add(new Property(
                         variable.Identifier.ToString(),
-                        field.Declaration.Type.ToString()));
+                        type,
+                        foldout));
                 }
+            }
 
-            if (properties.Count is 0) continue;
+            if (properties.Count is 0)
+                continue;
 
             StringBuilder sb = new();
 
@@ -69,7 +108,7 @@ public class NodeRefGenerator : ISourceGenerator
             sb.AppendLine("{");
             foreach (var prop in properties)
             {
-                sb.AppendLine($"    [Export, TypedPath(typeof({prop.type}))]");
+                sb.AppendLine($"    [Export, TypedPath(typeof({prop.type})), InFoldout({prop.foldout}, position = FoldoutPosition.Bottom)]");
                 sb.AppendLine($"    private NodePath _{prop.name};");
             }
             sb.AppendLine();

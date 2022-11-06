@@ -5,6 +5,8 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>enable</Nullable>
 
+		<!-- Disable field is never assigned warning -->
+		<NoWarn>CS0649</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
