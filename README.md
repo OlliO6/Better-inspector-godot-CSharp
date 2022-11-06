@@ -13,9 +13,12 @@ private NodePath animPath;
 ```
 You can even use unusual types like interfaces.
 
+That will look like this in the inspector.
+![](https://github.com/OlliO6/Better-inspector-godot-CSharp/blob/master/Screenshots/PathSelect.mp4)
+
 ------------------
 
-Quick refernces (Not implemented jet)
+Quick node refernces
 ---------------------------
 
 Ita really annoying to write this kind of stuff all the time.
@@ -35,17 +38,17 @@ So i implemented a source code generator that does that stuff automatically for 
 With it you can just do this instead.
 
 ```c#
-[Reference] public AnimationPlayer animPlayer;
+[NodeRef] public AnimationPlayer animPlayer;
 ```
 
 This will export a typed node path with the type of the field and assign the field on ready.
 To avoid having a cluddered inspector it will put those 
 node paths in a foldout called 'References' unless you don't set 'InFoldout' to false.
 ```c#
-[Reference(InFoldout = false)]
+[Reference(foldout = "")]
 ```
 
 Foldouts
 --------------
 
-Instead of adding the `[Tool]` attribute and having to override the `GetPropertyList` method (what will be pretty unreadable in my opinion) in order to make a foldout in the inspector. So i made an inspector plugin  
+Instead

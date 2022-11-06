@@ -1,45 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Examples/Testing.cs" type="Script" id=1]
 [ext_resource path="res://Examples/new scene.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Examples/ExampleResource.cs" type="Script" id=3]
-
-[sub_resource type="Resource" id=6]
-resource_name = "Paths"
-script = ExtResource( 3 )
-number = 0.052
-_StartF_PropertyPaths = false
-speedPath = null
-wwww = null
-jumpPath = "gvzjhvhjvjhz"
-_EndF_ = false
-number2 = 0.0
-
-[sub_resource type="PackedScene" id=3]
-_bundled = {
-"conn_count": 0,
-"conns": PoolIntArray(  ),
-"editable_instances": [  ],
-"names": PoolStringArray(  ),
-"node_count": 0,
-"node_paths": [  ],
-"nodes": PoolIntArray(  ),
-"variants": [  ],
-"version": 2
-}
-
-[sub_resource type="PackedScene" id=4]
-_bundled = {
-"conn_count": 0,
-"conns": PoolIntArray(  ),
-"editable_instances": [  ],
-"names": PoolStringArray(  ),
-"node_count": 0,
-"node_paths": [  ],
-"nodes": PoolIntArray(  ),
-"variants": [  ],
-"version": 2
-}
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -48,30 +10,11 @@ border_width_top = 22
 border_width_right = 29
 border_width_bottom = 27
 
-[sub_resource type="PackedScene" id=5]
-_bundled = {
-"conn_count": 0,
-"conns": PoolIntArray(  ),
-"editable_instances": [  ],
-"names": PoolStringArray(  ),
-"node_count": 0,
-"node_paths": [  ],
-"nodes": PoolIntArray(  ),
-"variants": [  ],
-"version": 2
-}
-
 [node name="Node2D" type="Node2D"]
 modulate = Color( 0.12549, 0.141176, 0.192157, 0.517647 )
 script = ExtResource( 1 )
-value2 = 0.065
-anim = NodePath("AnimationPlay2")
-playerRange = NodePath("Control/Control/Area2D")
-res = SubResource( 6 )
-number = SubResource( 3 )
-number2 = SubResource( 4 )
-_damageableObj = NodePath("Control/Control/DamageableSprite")
-_animationPlayer = NodePath("AnimationPlay2")
+_damageableObj = NodePath("Control/Control/Entity/HurtArea")
+_animationPlayer = NodePath("ConfirmationDialog/Tree/AnimationPlay")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0.12549, 0.141176, 0.192157, 1 )
@@ -128,12 +71,10 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="Control" parent="Control" instance=ExtResource( 2 )]
-number2 = SubResource( 5 )
 
 [node name="Control2" parent="Control" instance=ExtResource( 2 )]
 
 [node name="Control3" parent="Control" instance=ExtResource( 2 )]
-anim = NodePath("../../ConfirmationDialog/Tree/AnimationPlay")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 

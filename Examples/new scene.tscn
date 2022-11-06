@@ -11,12 +11,10 @@
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 0 )
-anim = NodePath("Tree")
 playerRange = NodePath("Area2D")
 node = NodePath(".")
 node2 = NodePath(".")
 res = ExtResource( 2 )
-_damageableObj = NodePath("DamageableSprite")
 
 [node name="Entity" type="Sprite" parent="."]
 
