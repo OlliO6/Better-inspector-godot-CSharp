@@ -61,7 +61,8 @@ public class TypedPathPropertyEditor : EditorProperty
                 .WitchChilds(
                     (assignButton = new Button()
                     {
-                        SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
+                        SizeFlagsHorizontal = (int)SizeFlags.ExpandFill,
+                        ClipText = true
                     })
                     .Connected("pressed", this, nameof(OnAssignPressed)),
                     (selectButton = new Button()
