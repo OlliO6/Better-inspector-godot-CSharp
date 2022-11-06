@@ -13,8 +13,13 @@ private NodePath animPath;
 ```
 You can even use unusual types like interfaces.
 
+It will look like thhis in the inspector.
+
+![Alt text](Screenshots/TypedPaths.gif)
+
 An extra feature of this is the select button. Click on it and the node where the path is pointing to will get selected.
-![](Screenshots/PathSelect.gif)
+
+<img src="Screenshots/PathSelect.gif" width="350" height="200" />
 
 Quick node refernces
 ---------------------------
