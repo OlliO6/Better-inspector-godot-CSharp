@@ -65,14 +65,21 @@ public class Plugin : EditorPlugin
         {
             var selection = GetEditorInterface().GetSelection().GetSelectedNodes();
 
-            foreach (Node node in selection)
-            {
-                GetEditorInterface().GetSelection().RemoveNode(node);
-            }
-            foreach (Node node in selection)
-            {
-                GetEditorInterface().GetSelection().AddNode(node);
-            }
+            SetSelectedNodes(selection);
+        }
+    }
+
+    public void SetSelectedNodes(Godot.Collections.Array nodes)
+    {
+        var selection = GetEditorInterface().GetSelection().GetSelectedNodes();
+
+        foreach (Node node in selection)
+        {
+            GetEditorInterface().GetSelection().RemoveNode(node);
+        }
+        foreach (Node node in nodes)
+        {
+            GetEditorInterface().GetSelection().AddNode(node);
         }
     }
 

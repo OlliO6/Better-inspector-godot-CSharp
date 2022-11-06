@@ -11,7 +11,7 @@ public class TypedPathPropertyEditor : EditorProperty
 {
     private Type type;
 
-    private Button assignButton, clearButton;
+    private Button assignButton, clearButton, selectButton;
 
     private bool isUpdating;
 
@@ -28,7 +28,7 @@ public class TypedPathPropertyEditor : EditorProperty
             this.value = value;
 
             if (!isUpdating) EmitChanged(GetEditedProperty(), value);
-            RefreshAssignButtonVisual();
+            RefreshVisual();
         }
     }
 
@@ -62,12 +62,20 @@ public class TypedPathPropertyEditor : EditorProperty
                     (assignButton = new Button()
                     {
                         SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
-                    }),
+                    })
+                    .Connected("pressed", this, nameof(OnAssignPressed)),
+                    (selectButton = new Button()
+                    {
+                        Icon = Plugin.GetIcon("ListSelect"),
+                        Flat = true
+                    })
+                    .Connected("pressed", this, nameof(OnSelectPressed)),
                     (clearButton = new Button()
                     {
                         Icon = Plugin.GetIcon("Clear"),
                         Flat = true
                     })
+                    .Connected("pressed", this, nameof(OnClearPressed))
                 ),
                 selectDialog = new TypedPathSelectDialog(type)
             )
@@ -76,10 +84,7 @@ public class TypedPathPropertyEditor : EditorProperty
         AddFocusable(assignButton);
         AddFocusable(clearButton);
 
-        RefreshAssignButtonVisual();
-
-        assignButton.Connect("pressed", this, nameof(OnAssignPressed));
-        clearButton.Connect("pressed", this, nameof(OnClearPressed));
+        RefreshVisual();
     }
 
     public override void UpdateProperty()
@@ -142,23 +147,30 @@ public class TypedPathPropertyEditor : EditorProperty
         Value = null;
     }
 
-    private void RefreshAssignButtonVisual()
+    private void OnSelectPressed()
     {
-        if (!Plugin.HasInstance || !IsInstanceValid(assignButton))
-            return;
+        if (!Plugin.HasInstance) return;
 
+        Plugin.Instance.SetSelectedNodes(new(
+            ((GetEditedObject() is Node node) ? node : Plugin.Instance.GetEditorInterface().GetEditedSceneRoot())
+                    .GetNode(GetEditedObject().Get(GetEditedProperty()) as NodePath)));
+    }
+
+    private void RefreshVisual()
+    {
         if (Value.IsEmptyOrNull())
         {
             assignButton.Text = "Assign...";
             assignButton.Flat = false;
             assignButton.Icon = null;
+            selectButton.Disabled = true;
             return;
         }
 
         Node from = (GetEditedObject() is Node editedNodee) ? editedNodee : Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();
-
         Node node = from.GetNodeOrNull(Value);
 
+        selectButton.Disabled = false;
         assignButton.Flat = true;
         assignButton.HintTooltip = Value;
 
