@@ -2,6 +2,7 @@
 namespace BetterInspector.Editor;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 using Utilities;
@@ -50,14 +51,14 @@ public class Plugin : EditorPlugin
     private async void Reset()
     {
         // Clear type cache
-        GD.Print("clear");
-        foreach (var key in TypeCache.Cache.Keys)
+        foreach (var key in new List<Godot.Object>(TypeCache.Cache.Keys))
             TypeCache.Instance.Remove(key);
 
         TypeCache.Cache.Clear();
 
-        await ToSignal(GetTree(), "idle_frame");
 
+
+        await ToSignal(GetTree(), "idle_frame");
 
         // Reset inspector plugins (order matters(last will parse property first))
         RestartInspectorPlugin(ref typedPathInspectorPlugin);
