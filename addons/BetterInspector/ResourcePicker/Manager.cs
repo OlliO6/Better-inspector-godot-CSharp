@@ -54,8 +54,9 @@ public class Manager : Node
 
         if (ClassDB.ClassExists(desiredType.Name) && ClassDB.CanInstance(desiredType.Name))
         {
-            propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(),
-                ClassDB.Instance(desiredType.Name));
+            // propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(),
+            //     ClassDB.Instance(desiredType.Name));
+            // menu.AddIconItem()
             GD.Print("Instanced from ClassDB");
             return;
         }
@@ -64,15 +65,44 @@ public class Manager : Node
 
         if (resourceScriptPathAttribute != null)
         {
-            Resource res = new Resource();
-            res.SetScript(GD.Load<Script>(resourceScriptPathAttribute.path));
-            res.ResourceName = desiredType.Name;
-            propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(), res);
+            menu.Clear();
+            menu.AddIconItem(GetIconFrom(desiredType), "New " + desiredType.FullName, id: 2);
+
+            menu.AddItem("");
+            menu.SetItemAsSeparator(menu.GetItemCount() - 1, true);
+
+            menu.AddIconItem(Plugin.GetIcon("Load"), "Load", 0);
+            menu.AddIconItem(Plugin.GetIcon("Load"), "Quick Load", 1);
+
+            Vector2 rightTop = menu.RectPosition + Vector2.Right * menu.RectSize.x;
+            menu.RectSize = new(0, 0);
+            menu.RectPosition = rightTop + Vector2.Left * menu.RectSize.x;
+
+            // menu.SetSize(new(0, 0));
+
+            // Resource res = new Resource();
+            // res.SetScript(GD.Load<Script>(resourceScriptPathAttribute.path));
+            // res.ResourceName = desiredType.Name;
+            // propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(), res);
             GD.Print("Instanced from script");
             return;
         }
 
 
-        GD.Print("Can't instance type: ", desiredType.FullName);
+        // GD.Print("Can't instance type: ", desiredType.FullName);
+
+        Texture GetIconFrom(Type type)
+        {
+            Texture icon = null;
+
+            while (icon == null && type != null)
+            {
+                GD.Print("Hello world: ", type.Name);
+                icon = Plugin.GetIcon(type.Name);
+                type = type.BaseType;
+            }
+
+            return icon;
+        }
     }
 }
