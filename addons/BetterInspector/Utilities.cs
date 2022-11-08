@@ -9,6 +9,8 @@ using Godot;
 
 public static class Utilities
 {
+    public const BindingFlags InstancePubAndNonPubBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
     public static Type GetInEditorTypeCached(this Godot.Object obj)
     {
         if (TypeCache.Cache.ContainsKey(obj))
@@ -91,6 +93,7 @@ public static class Utilities
 
     public static bool IsEmptyOrNull(this NodePath path) => path == null || path.IsEmpty();
 
+    public static string GetPropName(this string propPath) => propPath.GetFile();
 
     public static void AddOrSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
     {

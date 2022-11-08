@@ -11,11 +11,10 @@ public class Testing : Node2D
     [Export, EndFoldout] private bool canCrouch;
 
     [Export] private Weapon startWeapon;
+    [Export] private Rifle rifle;
 
     [Export, InFoldout("Movement")] private bool allowJump, allowSprint;
-    [Export, InFoldout("Movement")] private Resource someRes;
-}
-
-public class Weapon : Godot.Object
-{
+    [Export] private Resource someRes;
+    [Export] private Texture tex;
+    [Export] private Texture3D tex3d;
 }
