@@ -52,44 +52,16 @@ public class Manager : Node
 
         if (desiredType == null) return;
 
-        if (ClassDB.ClassExists(desiredType.Name) && ClassDB.CanInstance(desiredType.Name))
-        {
-            // propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(),
-            //     ClassDB.Instance(desiredType.Name));
-            // menu.AddIconItem()
-            GD.Print("Instanced from ClassDB");
-            return;
-        }
+        RecreateMenu(propertyEditor, menu, desiredType);
 
-        ResourceScriptPathAttribute resourceScriptPathAttribute = desiredType.GetCustomAttribute<ResourceScriptPathAttribute>();
+        // Give it the right position and size
+        Vector2 rightTop = menu.RectPosition + Vector2.Right * menu.RectSize.x;
+        menu.RectSize = new(0, 0);
+        menu.RectPosition = rightTop + Vector2.Left * menu.RectSize.x;
 
-        if (resourceScriptPathAttribute != null)
-        {
-            menu.Clear();
-            menu.AddIconItem(GetIconFrom(desiredType), "New " + desiredType.FullName, id: 2);
+        if (!menu.IsConnected("index_pressed", this, nameof(OnResPickerItemPressed)))
+            menu.Connect("index_pressed", this, nameof(OnResPickerItemPressed), new(menu, propertyEditor));
 
-            menu.AddItem("");
-            menu.SetItemAsSeparator(menu.GetItemCount() - 1, true);
-
-            menu.AddIconItem(Plugin.GetIcon("Load"), "Load", 0);
-            menu.AddIconItem(Plugin.GetIcon("Load"), "Quick Load", 1);
-
-            Vector2 rightTop = menu.RectPosition + Vector2.Right * menu.RectSize.x;
-            menu.RectSize = new(0, 0);
-            menu.RectPosition = rightTop + Vector2.Left * menu.RectSize.x;
-
-            // menu.SetSize(new(0, 0));
-
-            // Resource res = new Resource();
-            // res.SetScript(GD.Load<Script>(resourceScriptPathAttribute.path));
-            // res.ResourceName = desiredType.Name;
-            // propertyEditor.EmitChanged(propertyEditor.GetEditedProperty(), res);
-            GD.Print("Instanced from script");
-            return;
-        }
-
-
-        // GD.Print("Can't instance type: ", desiredType.FullName);
 
         Texture GetIconFrom(Type type)
         {
@@ -97,12 +69,104 @@ public class Manager : Node
 
             while (icon == null && type != null)
             {
-                GD.Print("Hello world: ", type.Name);
                 icon = Plugin.GetIcon(type.Name);
                 type = type.BaseType;
             }
 
             return icon;
         }
+        Texture GetIconFromClassDB(string @class)
+        {
+            Texture icon = null;
+
+            while (icon == null && ClassDB.ClassExists(@class))
+            {
+                icon = Plugin.GetIcon(@class);
+                @class = ClassDB.GetParentClass(@class);
+            }
+
+            return icon;
+        }
+
+        void RecreateMenu(EditorProperty propertyEditor, PopupMenu menu, Type desiredType)
+        {
+            bool copyShown = menu.GetItemIndex(6) != -1;
+            bool pasteShown = menu.GetItemIndex(7) != -1;
+
+            menu.Clear();
+
+            foreach (var type in GetType().Assembly.DefinedTypes
+                    .Where(type => desiredType.IsAssignableFrom(type)))
+            {
+                var pathAttribute = type.GetCustomAttribute<ResourceScriptPathAttribute>();
+
+                if (pathAttribute == null) continue;
+
+                propertyEditor.SetMeta(menu.GetItemCount().ToString(), pathAttribute.path);
+                menu.AddIconItem(GetIconFrom(type), "New " + type.Name, 100);
+            }
+
+            if (ClassDB.ClassExists(desiredType.Name))
+            {
+                string className = desiredType.Name;
+
+                if (ClassDB.CanInstance(className))
+                {
+                    propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
+                    menu.AddIconItem(GetIconFromClassDB(className), "New " + className, 100);
+                }
+
+                foreach (string @class in ClassDB.GetInheritersFromClass(className)
+                        .Where(@class => ClassDB.CanInstance(@class)))
+                {
+                    propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
+                    menu.AddIconItem(GetIconFromClassDB(@class), "New " + @class, 100);
+                }
+            }
+
+            menu.AddItem("");
+            menu.SetItemAsSeparator(menu.GetItemCount() - 1, true);
+
+            menu.AddIconItem(Plugin.GetIcon("Load"), "Quick Load", 1);
+            menu.AddIconItem(Plugin.GetIcon("Load"), "Load", 0);
+
+            if (propertyEditor.GetEditedObject().Get(propertyEditor.GetEditedProperty()) != null)
+            {
+                menu.AddIconItem(Plugin.GetIcon("Edit"), "Edit", 2);
+                menu.AddIconItem(Plugin.GetIcon("Clear"), "Clear", 3);
+                menu.AddIconItem(Plugin.GetIcon("Duplicate"), "Make Unique", 4);
+                menu.AddIconItem(Plugin.GetIcon("Save"), "Save", 5);
+            }
+            if (copyShown || pasteShown)
+            {
+                menu.AddItem("");
+                menu.SetItemAsSeparator(menu.GetItemCount() - 1, true);
+            }
+            if (copyShown) menu.AddIconItem(Plugin.GetIcon("ActionCopy"), "Copy", 6);
+            if (pasteShown) menu.AddIconItem(Plugin.GetIcon("ActionPaste"), "Paste", 7);
+        }
+    }
+
+    private void OnResPickerItemPressed(int idx, PopupMenu menu, EditorProperty property)
+    {
+        if (menu.GetItemId(idx) != 100)
+            return;
+
+        string typeName = menu.GetItemText(idx).LStrip("New ");
+        string metaString = (string)property.GetMeta(idx.ToString());
+
+        if (metaString == "#ClassDB")
+        {
+            property.EmitChanged(property.GetEditedProperty(),
+                ClassDB.Instance(typeName));
+            return;
+        }
+
+        if (!metaString.IsAbsPath()) return;
+
+        Resource res = new Resource();
+        res.SetScript(GD.Load<Script>(metaString));
+        res.ResourceName = typeName;
+        property.EmitChanged(property.GetEditedProperty(), res);
     }
 }

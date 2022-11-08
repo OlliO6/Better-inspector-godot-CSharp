@@ -1,6 +1,7 @@
 using System;
 using Godot;
 
+[BetterInspector.ResourceScriptPath("res://Examples/ExampleResource.cs")]
 public class ExampleResource : Resource
 {
     [Export] private float number;

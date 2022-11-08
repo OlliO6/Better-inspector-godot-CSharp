@@ -2,6 +2,7 @@ using System;
 using BetterInspector;
 using Godot;
 using Health;
+using RangeWeapons;
 
 public class Testing : Node2D
 {
@@ -10,6 +11,7 @@ public class Testing : Node2D
     [Export] private float jumpHeight;
     [Export, EndFoldout] private bool canCrouch;
 
+    [Export] private ExampleResource res;
     [Export] private Weapon startWeapon;
     [Export] private Rifle rifle;
 
