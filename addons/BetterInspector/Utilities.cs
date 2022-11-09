@@ -2,6 +2,7 @@ namespace BetterInspector.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using BetterInspector.Editor;
@@ -40,8 +41,8 @@ public static class Utilities
     // Because source code property doesn't updates sometimes
     public static string GetRealSourceCode(CSharpScript script)
     {
-        File file = new();
-        file.Open(script.ResourcePath, File.ModeFlags.Read);
+        Godot.File file = new();
+        file.Open(script.ResourcePath, Godot.File.ModeFlags.Read);
         string text = file.GetAsText();
         file.Close();
 
@@ -50,17 +51,39 @@ public static class Utilities
 
     public static string GetTypeName(string source)
     {
-        const string nspace = "namespace";
+        string @namespace = null;
+        string @class = "";
 
-        int nameStartIdx = source.IndexOf(" class ") + 7;
-        string name = source.Substring(nameStartIdx, source.IndexOf(' ', nameStartIdx) - nameStartIdx);
+        StringReader reader = new(source);
 
-        if (!source.Contains(nspace)) return name;
+        while (true)
+        {
+            string line = reader.ReadLine();
+            if (line == null) break;
 
-        int startIdx = source.IndexOf(nspace) + nspace.Length + 1;
-        string nspaceName = source.Substring(startIdx, source.IndexOf(';', startIdx) - startIdx);
+            line = new string(line.SkipWhile(@char => char.IsWhiteSpace(@char)).ToArray());
 
-        return $"{nspaceName}.{name}";
+            if (line.StartsWith("//")) continue;
+
+            if (line.StartsWith("namespace "))
+            {
+                @namespace = new string(
+                    line.LStrip("namespace ").TakeWhile(@char => char.IsLetterOrDigit(@char)).ToArray());
+            }
+
+            if (line.Contains("class "))
+            {
+                int idx = line.IndexOf("class ");
+                if (idx > 0 && line[idx - 1] != ' ') continue;
+                idx += 6;
+
+                @class = new string(
+                    line.Remove(0, idx).TakeWhile(@char => char.IsLetterOrDigit(@char)).ToArray());
+                break;
+            }
+        }
+
+        return @namespace != null ? $"{@namespace}.{@class}" : @class;
     }
 
     public static T WitchChilds<T>(this T from, params Node[] childs) where T : Node
