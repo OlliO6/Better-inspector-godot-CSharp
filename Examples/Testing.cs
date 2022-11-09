@@ -2,6 +2,7 @@ using System;
 using BetterInspector;
 using Godot;
 using Health;
+using RangeWeapons;
 
 public class Testing : Node2D
 {
@@ -10,12 +11,12 @@ public class Testing : Node2D
     [Export] private float jumpHeight;
     [Export, EndFoldout] private bool canCrouch;
 
+    [Export] private ExampleResource res;
     [Export] private Weapon startWeapon;
+    [Export] private Rifle rifle;
 
     [Export, InFoldout("Movement")] private bool allowJump, allowSprint;
-    [Export, InFoldout("Movement")] private Resource someRes;
-}
-
-public class Weapon : Godot.Object
-{
+    [Export] private Resource someRes;
+    [Export] private Texture tex;
+    [Export] private Texture3D tex3d;
 }

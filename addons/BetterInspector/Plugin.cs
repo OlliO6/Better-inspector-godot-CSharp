@@ -13,6 +13,7 @@ public class Plugin : EditorPlugin
     public static Plugin Instance { get; private set; }
     public static bool HasInstance => IsInstanceValid(Instance);
 
+    private ResourcePicker.Manager resManager;
     private FoldoutInspectorPlugin foldoutInspectorPlugin;
     private TypedPathsInspectorPlugin typedPathInspectorPlugin;
 
@@ -33,7 +34,8 @@ public class Plugin : EditorPlugin
 
     public static Texture GetIcon(string name)
     {
-        if (!HasInstance) return null;
+        if (!HasInstance ||
+            !Instance.GetEditorInterface().GetBaseControl().Theme.HasIcon(name, "EditorIcons")) return null;
 
         return Instance.GetEditorInterface().GetBaseControl().Theme.GetIcon(name, "EditorIcons");
     }
@@ -56,7 +58,8 @@ public class Plugin : EditorPlugin
 
         TypeCache.Cache.Clear();
 
-
+        resManager?.QueueFree();
+        AddChild(resManager = new(this));
 
         await ToSignal(GetTree(), "idle_frame");
 

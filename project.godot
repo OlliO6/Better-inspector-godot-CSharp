@@ -14,11 +14,15 @@ config/name="BetterInspector"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/BetterInspector/plugin.cfg", "res://addons/Iconify/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/BetterInspector/plugin.cfg", "res://addons/Iconify/plugin.cfg" )
 
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
+
+[locale]
+
+locale_filter=[ 0, [  ] ]
 
 [physics]
 

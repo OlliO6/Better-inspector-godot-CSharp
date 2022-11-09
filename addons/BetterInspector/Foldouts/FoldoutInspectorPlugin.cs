@@ -23,7 +23,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
-        string propName = path.GetFile();
+        string propName = path.GetPropName();
         Foldout foldout = null;
 
         string foldoutName = CheckForFoldout(
@@ -84,7 +84,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 return "";
             }
 
-            FieldInfo field = objType.GetField(propName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            FieldInfo field = objType.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
 
             if (field != null)
             {
@@ -111,7 +111,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 }
             }
 
-            PropertyInfo prop = objType.GetProperty(propName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            PropertyInfo prop = objType.GetProperty(propName, Utilities.InstancePubAndNonPubBindingFlags);
 
             if (prop != null)
             {

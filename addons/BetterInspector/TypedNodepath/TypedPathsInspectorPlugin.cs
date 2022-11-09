@@ -6,16 +6,15 @@ using System.Reflection;
 using BetterInspector.Utilities;
 using Godot;
 
-// [Tool]
 public class TypedPathsInspectorPlugin : EditorInspectorPlugin
 {
     public override bool CanHandle(Godot.Object @object) => true;
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
-        string propName = path.GetFile();
+        string propName = path.GetPropName();
 
-        FieldInfo field = @object.GetInEditorTypeCached()?.GetField(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        FieldInfo field = @object.GetInEditorTypeCached()?.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
 
         if (field == null || field.FieldType != typeof(NodePath)) return false;
 
