@@ -27,8 +27,6 @@ public class Manager : Node
     {
         if (!(node.GetClass() == "EditorPropertyResource")) return;
 
-        GD.Print("FOUND RESOURCE");
-
         var picker = node.GetChildren()
                 .OfType<EditorResourcePicker>()
                 .First();
