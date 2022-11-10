@@ -2,7 +2,6 @@ using System;
 using BetterInspector;
 using Godot;
 
-[Tool]
 public partial class CoolControl : Control
 {
     [Export] private float number;

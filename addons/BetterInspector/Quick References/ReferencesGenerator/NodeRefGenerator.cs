@@ -114,7 +114,7 @@ public class NodeRefGenerator : ISourceGenerator
             sb.AppendLine("    public override void _Ready()");
             sb.AppendLine("    {");
             foreach (var prop in properties)
-                sb.AppendLine($"        {prop.name} = GetNode<{prop.type}>(_{prop.name});");
+                sb.AppendLine($"        {prop.name} = GetNodeOrNull<{prop.type}>(_{prop.name});");
             sb.AppendLine("        OnReady();");
             sb.AppendLine("    }");
             sb.AppendLine();

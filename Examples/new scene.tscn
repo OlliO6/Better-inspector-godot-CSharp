@@ -79,8 +79,6 @@ __meta__ = {
 ctrl = NodePath("../Control39")
 ctrl2 = NodePath("../Control39")
 ctrl3 = NodePath("..")
-anim = NodePath("")
-_dust = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Control2/CoolControl"]
 anchor_right = 1.0
