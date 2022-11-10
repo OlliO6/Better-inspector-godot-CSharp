@@ -14,7 +14,7 @@ config/name="BetterInspector"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/BetterInspector/plugin.cfg", "res://addons/Iconify/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/BetterInspector/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg" )
 
 [gui]
 

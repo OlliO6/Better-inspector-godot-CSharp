@@ -3,7 +3,7 @@ namespace BetterInspector.Editor;
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Reflection;
 using Godot;
 using Utilities;
 
@@ -16,6 +16,8 @@ public class Plugin : EditorPlugin
     private ResourcePicker.Manager resManager;
     private FoldoutInspectorPlugin foldoutInspectorPlugin;
     private TypedPathsInspectorPlugin typedPathInspectorPlugin;
+
+    private List<string> recognizedResourceTypes = new();
 
     public override void _EnterTree()
     {
@@ -30,6 +32,7 @@ public class Plugin : EditorPlugin
 
         RemoveInspectorPlugin(typedPathInspectorPlugin);
         RemoveInspectorPlugin(foldoutInspectorPlugin);
+        ClearResourceTypes();
     }
 
     public static Texture GetIcon(string name)
@@ -71,12 +74,51 @@ public class Plugin : EditorPlugin
         RestartInspectorPlugin(ref foldoutInspectorPlugin);
 
         Reselect();
+        ResetResourceTypes();
 
         void Reselect()
         {
             var selection = GetEditorInterface().GetSelection().GetSelectedNodes();
 
             SetSelectedNodes(selection);
+        }
+
+        void ResetResourceTypes()
+        {
+            ClearResourceTypes();
+            AddResourceTypes();
+        }
+    }
+
+    private void AddResourceTypes()
+    {
+        foreach (var type in GetType().Assembly.DefinedTypes)
+        {
+            ResourceScriptPathAttribute resourcePath = type.GetCustomAttribute<ResourceScriptPathAttribute>();
+
+            if (resourcePath == null) continue;
+
+            recognizedResourceTypes.Add(type.Name);
+            AddCustomType(type.Name, GetBaseType(type), GD.Load<Script>(resourcePath.path), null);
+        }
+
+        string GetBaseType(Type type)
+        {
+            Type baseType = type.BaseType;
+
+            if (ClassDB.ClassExists(baseType.Name))
+                return baseType.Name;
+
+            return GetBaseType(baseType);
+        }
+    }
+
+    private void ClearResourceTypes()
+    {
+        foreach (var resourceType in new List<string>(recognizedResourceTypes))
+        {
+            recognizedResourceTypes.Remove(resourceType);
+            RemoveCustomType(resourceType);
         }
     }
 
