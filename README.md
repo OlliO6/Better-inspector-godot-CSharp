@@ -1,8 +1,15 @@
 Better inspector godot
 =================
 
+### Main features:
+  - [Typed node paths](#typed-node-paths)
+  - [Quick node refernces](#quick-node-refernces)
+  - [Foldouts](#foldouts)
+  - [Typed Resource Picker](#c-resource-picker)
+
 This plugin adds extra features and improvements related to the inspector.
-It's mainly for c#.
+It's mainly for c# and the 'Typed' features are also supporting c# types.
+
 
 Setup
 ------------
@@ -30,7 +37,7 @@ Typed node paths
 
 If you have an exported node path and you want it to point to a specific type of node you can use the `TypedPath(Type)` attribute.
 ```c#
-[Export, TypedPath(typeof(AnimationPlayer))]
+[Export, TypedPath(typeof(AnimationPlayer))]  
 private NodePath animPath;
 ```
 You can even use unusual types like interfaces.
@@ -73,6 +80,13 @@ If you don't want it to be in a foldout set it to `""`.
 ```c#
 [Reference(foldout = "")]
 ```
+
+> You need to add the `partial` modifier to your class
+> when you use this feature and you can't longer override the `_Ready` function.\
+> Instead you can do this: 
+> ```c#
+> partial void OnReady()
+> ```
 
 Foldouts
 --------------
@@ -118,3 +132,26 @@ export var _EndF_Movement
 
 export var startWeapon : Weapon
 ```
+
+C# Resource Picker
+------------------
+
+When you have a resource class for example this one:
+```c#
+public class Weapon : Resource
+{
+    [Export] public string name;
+    [Export] public int rarity;
+}
+```
+
+And you try to make a exported reference of that type.
+```c#
+[Export] private Weapon weapon;
+```
+
+The resource picker (the popup menu where you can choose between resource types) will have all of the Godot recognized resources.
+It wont even show the `New Weapon` option because it's not recognized by Godot.
+
+However if this plugin is enabled it will only show the `New Weapon` option (and also a option for things that inherits from Weapon).
+If Weapon is a abstract class it will only show inherited types.
