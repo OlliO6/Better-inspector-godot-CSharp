@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="C:/Users/olive/GodotProjects/BetterInspector/Examples/Rifle.cs" type="Script" id=1]
+
+[resource]
+resource_name = "Rifle"
+script = ExtResource( 1 )
+number = 0.0
+number2 = 0.0
+number3 = 0.0
+bulletDamage = 0.0
+timeBetweenShooting = 0.0

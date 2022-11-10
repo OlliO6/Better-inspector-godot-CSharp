@@ -28,13 +28,11 @@ public class NodeRefGenerator : ISourceGenerator
         {
             var root = syntaxTree.GetRoot();
 
-            // Get Fields with Require attribute
+            // Get Fields with attributes
             var fieldsAttribute = root
                     .DescendantNodes()
                     .OfType<FieldDeclarationSyntax>()
                     .Where(field => field.AttributeLists.Count > 0);
-            //.Any(attributes => attributes.Attributes
-            //.Any(attribute => attribute.Name.ToString() is "NodeRef")));
 
             List<Property> properties = new();
 
@@ -85,8 +83,6 @@ public class NodeRefGenerator : ISourceGenerator
             if (properties.Count is 0)
                 continue;
 
-            StringBuilder sb = new();
-
             var @class = root.DescendantNodes()
                     .OfType<ClassDeclarationSyntax>().First();
 
@@ -96,6 +92,8 @@ public class NodeRefGenerator : ISourceGenerator
             var @namespace = root.DescendantNodes()
                     .OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault();
 
+            StringBuilder sb = new();
+
             foreach (var use in usings)
                 sb.AppendLine(use.ToString());
             sb.AppendLine();
@@ -104,7 +102,8 @@ public class NodeRefGenerator : ISourceGenerator
                 sb.AppendLine($"namespace {@namespace?.Name.ToString()}");
                 sb.AppendLine("{");
             }
-            sb.AppendLine($"partial class {@class.Identifier.ToString()} : {@class.BaseList?.Types.First().Type.ToString()}");
+            
+            sb.AppendLine($"partial class {@class.Identifier} : {@class.BaseList?.Types.First()?.Type.ToString()}");
             sb.AppendLine("{");
             foreach (var prop in properties)
             {
@@ -124,7 +123,7 @@ public class NodeRefGenerator : ISourceGenerator
             if (@namespace is not null)
                 sb.AppendLine("}");
 
-            context.AddSource($"{@class.Identifier.ToString()}.g.cs", sb.ToString());
+            context.AddSource($"{@class.Identifier}.g.cs", sb.ToString());
         }
     }
 

@@ -1,8 +1,10 @@
 using BetterInspector;
 using Godot;
+using Health;
 
-[ResourceScriptPath("res://Examples/Weapon.cs")]
-public class Weapon : Resource
+// [ResourceScriptPath(@"C:\Users\olive\GodotProjects\BetterInspector\Examples\Weapon.cs")]
+[Resource]
+public partial class Weapon : Resource, IDamageable
 {
     [Export] private float number;
     [Export] private float number2;

@@ -3,8 +3,8 @@ using Godot;
 
 namespace RangeWeapons
 {
-    [ResourceScriptPath("res://Examples/Rifle.cs")]
-    public class Rifle : Weapon
+    [Resource]
+    public partial class Rifle : Weapon
     {
         [Export, StartFoldout("Rifle")] private float bulletDamage;
         [Export, EndFoldout] private float timeBetweenShooting;

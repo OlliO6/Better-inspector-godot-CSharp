@@ -3,11 +3,13 @@ using BetterInspector;
 using Godot;
 
 [Tool]
-public class CoolControl : Control
+public partial class CoolControl : Control
 {
     [Export] private float number;
     [Export] private float number2;
     [Export] private float number3;
+
+    [NodeRef] public Particles2D dust;
 
     [Export] bool _StartF_AtTop_Door_Cell_Positions;
     [Export, TypedPath(typeof(Control))] private NodePath ctrl;
@@ -17,4 +19,9 @@ public class CoolControl : Control
     [Export] bool _EndF_Door_Cell_Positions;
 
     [Export] private float number4;
+
+    partial void OnReady()
+    {
+        // Code here
+    }
 }
