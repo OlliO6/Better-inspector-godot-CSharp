@@ -1,5 +1,5 @@
 .import/
 .mono/
-addons\zylann.editor_debugger
-addons\Iconify
+addons/zylann.editor_debugger/
+addons/Iconify/
 .vs
