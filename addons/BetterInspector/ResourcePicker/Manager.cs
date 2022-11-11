@@ -92,35 +92,7 @@ public class Manager : Node
             bool pasteShown = menu.GetItemIndex(7) != -1;
 
             menu.Clear();
-
-            foreach (var type in GetType().Assembly.DefinedTypes
-                    .Where(type => desiredType.IsAssignableFrom(type)))
-            {
-                var pathAttribute = type.GetCustomAttribute<ResourceScriptPathAttribute>();
-
-                if (pathAttribute == null) continue;
-
-                propertyEditor.SetMeta(menu.GetItemCount().ToString(), pathAttribute.path);
-                menu.AddIconItem(GetIconFrom(type), "New " + type.Name, 100);
-            }
-
-            if (ClassDB.ClassExists(desiredType.Name))
-            {
-                string className = desiredType.Name;
-
-                if (ClassDB.CanInstance(className))
-                {
-                    propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
-                    menu.AddIconItem(GetIconFromClassDB(className), "New " + className, 100);
-                }
-
-                foreach (string @class in ClassDB.GetInheritersFromClass(className)
-                        .Where(@class => ClassDB.CanInstance(@class)))
-                {
-                    propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
-                    menu.AddIconItem(GetIconFromClassDB(@class), "New " + @class, 100);
-                }
-            }
+            AddNewIcons(propertyEditor, menu, desiredType);
 
             menu.AddItem("");
             menu.SetItemAsSeparator(menu.GetItemCount() - 1, true);
@@ -142,6 +114,38 @@ public class Manager : Node
             }
             if (copyShown) menu.AddIconItem(Plugin.GetIcon("ActionCopy"), "Copy", 6);
             if (pasteShown) menu.AddIconItem(Plugin.GetIcon("ActionPaste"), "Paste", 7);
+
+            void AddNewIcons(EditorProperty propertyEditor, PopupMenu menu, Type desiredType)
+            {
+                foreach (var type in GetType().Assembly.DefinedTypes
+                                    .Where(type => desiredType.IsAssignableFrom(type)))
+                {
+                    var pathAttribute = type.GetCustomAttribute<ResourceScriptPathAttribute>();
+
+                    if (pathAttribute == null) continue;
+
+                    propertyEditor.SetMeta(menu.GetItemCount().ToString(), pathAttribute.path);
+                    menu.AddIconItem(GetIconFrom(type), "New " + type.Name, 100);
+                }
+
+                if (ClassDB.ClassExists(desiredType.Name))
+                {
+                    string className = desiredType.Name;
+
+                    if (ClassDB.CanInstance(className))
+                    {
+                        propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
+                        menu.AddIconItem(GetIconFromClassDB(className), "New " + className, 100);
+                    }
+
+                    foreach (string @class in ClassDB.GetInheritersFromClass(className)
+                            .Where(@class => ClassDB.CanInstance(@class)))
+                    {
+                        propertyEditor.SetMeta(menu.GetItemCount().ToString(), "#ClassDB");
+                        menu.AddIconItem(GetIconFromClassDB(@class), "New " + @class, 100);
+                    }
+                }
+            }
         }
     }
 
