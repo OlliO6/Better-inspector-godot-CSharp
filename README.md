@@ -155,3 +155,17 @@ It wont even show the `New Weapon` option because it's not recognized by Godot.
 
 However if this plugin is enabled it will only show the `New Weapon` option (and also a option for things that inherits from Weapon).
 If Weapon is a abstract class it will only show inherited types.
+
+You will just need to add the `[ResourceScriptPath(string path)]` attribute to the Weapon class and assign the path tho the script.
+Or you just use the `[Resource]` attribute and let it automatically generate the `[ResourceScriptPath(string path)]` attribute.
+Wich is better not only because its easier to write but also because it will automatically update if you move the script in a different folder.
+```c#
+[Resource]
+public class Weapon : Resource
+{
+    [Export] public string name;
+    [Export] public int rarity;
+}
+```
+
+The resource will also be recognized by Godot via `AddCustomType`.
