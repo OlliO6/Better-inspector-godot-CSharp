@@ -31,7 +31,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
 
         string foldoutName = CheckForFoldout(
             propName,
-            @object.GetInEditorTypeCached(),
+            @object?.GetInEditorTypeCached(),
             out FoldoutPosition position,
             out bool isExpressionProperty,
             out bool dontSetPrevFoldout,
