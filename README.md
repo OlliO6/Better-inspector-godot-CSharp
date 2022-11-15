@@ -170,3 +170,9 @@ public class Weapon : Resource
 ![Alt text](Screenshots/Resource%20picker.png)
 
 The resource will also be recognized by Godot via `AddCustomType`.
+
+
+Limitations/Known Issues:
+-------------------------
+
+- Most stuff won't correctly work if nested in a list or dictionary.
