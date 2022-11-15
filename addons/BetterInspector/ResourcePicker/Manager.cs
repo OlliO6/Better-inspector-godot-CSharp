@@ -1,3 +1,4 @@
+#if TOOLS
 namespace BetterInspector.Editor.ResourcePicker;
 
 using System;
@@ -172,3 +173,5 @@ public class Manager : Node
         property.EmitChanged(property.GetEditedProperty(), res);
     }
 }
+
+#endif
