@@ -151,7 +151,7 @@ And you try to make a exported reference of that type.
 ```
 
 The resource picker (the popup menu where you can choose between resource types) will have all of the Godot recognized resources.
-It wont even show the `New Weapon` option because it's not recognized by Godot.
+But not the `New Weapon` option.
 
 However if this plugin is enabled it will only show the `New Weapon` option (and also a option for things that inherits from Weapon).
 If Weapon is a abstract class it will only show inherited types.
@@ -167,5 +167,6 @@ public class Weapon : Resource
     [Export] public int rarity;
 }
 ```
+![Alt text](Screenshots/Resource%20picker.png)
 
 The resource will also be recognized by Godot via `AddCustomType`.
