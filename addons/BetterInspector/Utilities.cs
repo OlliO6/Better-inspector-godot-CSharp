@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BetterInspector.Editor;
 using Godot;
 
 public static class Utilities
