@@ -19,6 +19,9 @@ public partial class CoolControl : Control
 
     [Export] private float number4;
 
+    [Export] private Godot.Collections.Array things;
+    [Export] private Godot.Collections.Dictionary things2;
+
     partial void OnReady()
     {
         // Code here

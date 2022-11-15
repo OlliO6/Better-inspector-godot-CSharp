@@ -12,9 +12,12 @@ public class TypedPathsInspectorPlugin : EditorInspectorPlugin
 
     public override bool ParseProperty(Godot.Object @object, int typeArg, string path, int hint, string hintText, int usage)
     {
+        // Do nothing if it is e.g. list
+        if (@object == null) return false;
+
         string propName = path.GetPropName();
 
-        FieldInfo field = @object?.GetInEditorTypeCached()?.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
+        FieldInfo field = @object.GetInEditorTypeCached()?.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
 
         if (field == null || field.FieldType != typeof(NodePath)) return false;
 
