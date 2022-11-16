@@ -153,7 +153,7 @@ public class TypedPathSelectDialog : ConfirmationDialog
         var rootNode = Plugin.Instance.GetEditorInterface().GetEditedSceneRoot();
 
         // Get instanced Nodes with editable children
-        PackedScene packedScene = GD.Load<PackedScene>(rootNode.Filename);
+        PackedScene packedScene = rootNode.Filename != string.Empty ? GD.Load<PackedScene>(rootNode.Filename) : null;
         List<Node> editableNodes = new();
 
         if (packedScene != null)
@@ -192,13 +192,13 @@ public class TypedPathSelectDialog : ConfirmationDialog
             void ProcessNode(TreeItem treeItem, Node node, bool currentUnowned)
             {
                 Type nodeType = node.GetInEditorTypeCached();
-                bool tyeAssignable = type.IsAssignableFrom(nodeType);
+                bool typeAssignable = type.IsAssignableFrom(nodeType);
 
                 treeItem.Collapsed = true;
                 treeItem.SetText(0, node.Name);
                 treeItem.SetIcon(0, Plugin.GetIcon(node.GetClass()));
                 treeItem.SetEditable(0, false);
-                treeItem.SetSelectable(0, tyeAssignable);
+                treeItem.SetSelectable(0, typeAssignable);
 
                 if (editableNodes.Contains(node))
                     treeItem.SetMeta("Instanced", node);
@@ -206,7 +206,7 @@ public class TypedPathSelectDialog : ConfirmationDialog
                 else if (treeItem.GetParent() != null && treeItem.GetParent().HasMeta("Instanced"))
                     treeItem.SetMeta("Instanced", treeItem.GetParent().GetMeta("Instanced"));
 
-                if (tyeAssignable)
+                if (typeAssignable)
                 {
                     Expand(treeItem);
 
