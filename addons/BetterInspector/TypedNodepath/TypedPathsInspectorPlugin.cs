@@ -17,7 +17,7 @@ public class TypedPathsInspectorPlugin : EditorInspectorPlugin
 
         string propName = path.GetPropName();
 
-        FieldInfo field = @object.GetInEditorTypeCached()?.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
+        FieldInfo field = @object.GetInEditorTypeCached()?.GetSeenField(propName);
 
         if (field == null || field.FieldType != typeof(NodePath)) return false;
 

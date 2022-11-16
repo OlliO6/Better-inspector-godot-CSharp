@@ -42,12 +42,12 @@ public class Manager : Node
 
     private void OnPickerIsPoppingUp(EditorProperty propertyEditor, EditorResourcePicker picker, PopupMenu menu)
     {
-        Type desiredType = propertyEditor.GetEditedObject().GetInEditorTypeCached()
-                ?.GetField(propertyEditor.GetEditedProperty().GetPropName(), Utilities.InstancePubAndNonPubBindingFlags)?.FieldType;
+        string propName = propertyEditor.GetEditedProperty().GetPropName();
+
+        Type desiredType = propertyEditor.GetEditedObject().GetInEditorTypeCached().GetSeenField(propName)?.FieldType;
 
         if (desiredType == null)
-            desiredType = propertyEditor.GetEditedObject().GetInEditorTypeCached()
-                    ?.GetProperty(propertyEditor.GetEditedProperty().GetPropName(), Utilities.InstancePubAndNonPubBindingFlags)?.PropertyType;
+            desiredType = propertyEditor.GetEditedObject().GetInEditorTypeCached().GetSeenProperty(propName)?.PropertyType;
 
         if (desiredType == null) return;
 

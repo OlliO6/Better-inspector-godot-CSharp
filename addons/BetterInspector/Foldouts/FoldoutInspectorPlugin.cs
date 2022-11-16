@@ -87,7 +87,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 return "";
             }
 
-            FieldInfo field = objType.GetField(propName, Utilities.InstancePubAndNonPubBindingFlags);
+            FieldInfo field = objType.GetSeenField(propName);
 
             if (field != null)
             {
@@ -114,7 +114,7 @@ public class FoldoutInspectorPlugin : EditorInspectorPlugin
                 }
             }
 
-            PropertyInfo prop = objType.GetProperty(propName, Utilities.InstancePubAndNonPubBindingFlags);
+            PropertyInfo prop = objType.GetSeenProperty(propName);
 
             if (prop != null)
             {

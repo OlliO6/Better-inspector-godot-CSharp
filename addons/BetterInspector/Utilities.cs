@@ -39,6 +39,34 @@ public static class Utilities
 
     public static Type GetTypeFromSource(string source) => Type.GetType(GetTypeName(source));
 
+    // Also returns private fields from base types
+    public static FieldInfo GetSeenField(this Type type, string name)
+    {
+        FieldInfo field = type.GetField(name, InstancePubAndNonPubBindingFlags);
+
+        if (field != null)
+            return field;
+
+        if (type.BaseType == null)
+            return null;
+
+        return type.BaseType.GetSeenField(name);
+    }
+
+    // Also returns private properties from base types
+    public static PropertyInfo GetSeenProperty(this Type type, string name)
+    {
+        PropertyInfo field = type.GetProperty(name, InstancePubAndNonPubBindingFlags);
+
+        if (field != null)
+            return field;
+
+        if (type.BaseType == null)
+            return null;
+
+        return type.BaseType.GetSeenProperty(name);
+    }
+
     // Because source code property doesn't updates sometimes
     public static string GetRealSourceCode(CSharpScript script)
     {
